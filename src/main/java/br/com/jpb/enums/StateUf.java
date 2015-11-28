@@ -1,6 +1,6 @@
 package br.com.jpb.enums;
 
-public enum StateUf {
+public enum StateUf implements State {
 	AC("Acre"),
 	AL("Alagoas"),
 	AM("Amazonas"),

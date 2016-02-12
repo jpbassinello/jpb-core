@@ -1,5 +1,4 @@
 /target/
-/.settings/
-/.classpath
-/.project
+/.idea/
 /src/main/resources/rebel.xml
+/jpb-core.iml

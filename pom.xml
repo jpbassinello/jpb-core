@@ -1,15 +1,17 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.jpb</groupId>
 	<artifactId>jpb-core</artifactId>
-	<version>2.5.0</version>
+	<version>2.6.0</version>
 	<name>Core JPB</name>
 	<description>Util classes developed by JPB</description>
 
 	<properties>
 		<org.springframework.version>4.2.4.RELEASE</org.springframework.version>
-		<org.springframework.security.version>4.0.3.RELEASE</org.springframework.security.version>
+		<org.springframework.security.version>4.0.3.RELEASE
+		</org.springframework.security.version>
 		<hibernate.version>5.1.0.Final</hibernate.version>
 	</properties>
 
@@ -196,11 +198,6 @@
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-s3</artifactId>
 			<version>1.10.52</version>
-		</dependency>
-		<dependency>
-			<groupId>com.cribbstechnologies.clients</groupId>
-			<artifactId>mandrillClient</artifactId>
-			<version>0.0.1-jpb</version>
 		</dependency>
 
 		<!-- test -->

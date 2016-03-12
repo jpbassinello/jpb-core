@@ -60,6 +60,7 @@ public class City implements Serializable {
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "STATE_ID")
+	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	public State getState() {
 		return state;
 	}

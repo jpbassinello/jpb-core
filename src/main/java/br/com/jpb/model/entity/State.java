@@ -78,6 +78,7 @@ public class State implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "COUNTRY_ID")
 	@NotNull
+	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	public Country getCountry() {
 		return country;
 	}

@@ -19,12 +19,14 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table(name = "CITY")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Immutable
 public class City implements Serializable {
 
 	private Long id;

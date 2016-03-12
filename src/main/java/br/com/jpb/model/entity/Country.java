@@ -19,6 +19,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.jpb.enums.CountryAcronym;
@@ -27,6 +28,7 @@ import br.com.jpb.enums.CountryAcronym;
 @Table(name = "COUNTRY")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Immutable
 public class Country implements Serializable {
 
 	private Long id;

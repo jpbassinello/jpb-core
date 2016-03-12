@@ -22,6 +22,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import br.com.jpb.enums.StateUf;
@@ -30,6 +31,7 @@ import br.com.jpb.enums.StateUf;
 @Table(name = "STATE")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Immutable
 public class State implements Serializable {
 
 	private Long id;

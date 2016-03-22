@@ -1,32 +1,25 @@
 package br.com.jpb.model.entity;
 
+import br.com.jpb.util.DateTimeUtil;
+import br.com.jpb.util.StringUtil;
+import com.google.common.io.Files;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.validator.constraints.NotEmpty;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-import org.hibernate.validator.constraints.NotEmpty;
-
-import br.com.jpb.util.DateTimeUtil;
-import br.com.jpb.util.StringUtil;
-
-import com.google.common.io.Files;
-
 @Entity
 @Table(name = "AWS_S3_FILE")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AwsS3File implements Serializable {
 
 	private static final int MD5_HASH_SIZE = 8;
@@ -47,8 +40,8 @@ public class AwsS3File implements Serializable {
 		this.folder = folder;
 		this.name = Files.getNameWithoutExtension(fileName);
 		this.extension = Files.getFileExtension(fileName);
-		this.hash = StringUtil.encode(
-				String.valueOf(System.currentTimeMillis()), MD5_HASH_SIZE);
+		this.hash = StringUtil.encode(String.valueOf(System.currentTimeMillis
+				()), MD5_HASH_SIZE);
 		this.userCreate = userCreate;
 		this.createDateTime = now;
 	}
@@ -70,11 +63,11 @@ public class AwsS3File implements Serializable {
 	public String getFolder() {
 		return folder;
 	}
-	
+
 	void setFolder(String folder) {
 		this.folder = folder;
 	}
-	
+
 	@Column(name = "NAME")
 	@NotEmpty
 	@Size(max = 255)
@@ -159,7 +152,7 @@ public class AwsS3File implements Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this,
-				ToStringStyle.MULTI_LINE_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle
+				.MULTI_LINE_STYLE);
 	}
 }

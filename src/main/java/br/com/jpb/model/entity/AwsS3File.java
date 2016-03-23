@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Entity
-@Table(name = "AWS_S3_FILE")
+@Table(name = "aws_s3_file")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AwsS3File implements Serializable {
@@ -48,7 +48,7 @@ public class AwsS3File implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "AWS_S3_FILE_ID")
+	@Column(name = "aws_s3_file_id")
 	public Long getId() {
 		return id;
 	}
@@ -57,7 +57,7 @@ public class AwsS3File implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "FOLDER")
+	@Column(name = "folder")
 	@NotEmpty
 	@Size(max = 255)
 	public String getFolder() {
@@ -68,7 +68,7 @@ public class AwsS3File implements Serializable {
 		this.folder = folder;
 	}
 
-	@Column(name = "NAME")
+	@Column(name = "name")
 	@NotEmpty
 	@Size(max = 255)
 	public String getName() {
@@ -79,7 +79,7 @@ public class AwsS3File implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "HASH")
+	@Column(name = "hash")
 	@NotEmpty
 	@Size(max = 255)
 	public String getHash() {
@@ -90,7 +90,7 @@ public class AwsS3File implements Serializable {
 		this.hash = hash;
 	}
 
-	@Column(name = "EXTENSION")
+	@Column(name = "extension")
 	@NotEmpty
 	@Size(max = 10)
 	public String getExtension() {
@@ -102,7 +102,7 @@ public class AwsS3File implements Serializable {
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "CREATE_DATE_TIME")
+	@Column(name = "create_date_time")
 	@NotNull
 	public Date getCreateDateTime() {
 		return createDateTime;
@@ -112,7 +112,7 @@ public class AwsS3File implements Serializable {
 		this.createDateTime = createDateTime;
 	}
 
-	@Column(name = "USER_CREATE")
+	@Column(name = "user_create")
 	@NotEmpty
 	@Size(max = 100)
 	public String getUserCreate() {

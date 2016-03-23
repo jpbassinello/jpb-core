@@ -25,7 +25,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.com.jpb.enums.CountryAcronym;
 
 @Entity
-@Table(name = "COUNTRY")
+@Table(name = "country")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
@@ -40,7 +40,7 @@ public class Country implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "COUNTRY_ID")
+	@Column(name = "country_id")
 	public Long getId() {
 		return id;
 	}
@@ -49,7 +49,7 @@ public class Country implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "NAME")
+	@Column(name = "name")
 	@NotEmpty
 	@Size(max = 50)
 	public String getName() {
@@ -60,7 +60,7 @@ public class Country implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "ACRONYM")
+	@Column(name = "acronym")
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	public CountryAcronym getAcronym() {

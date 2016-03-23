@@ -23,7 +23,7 @@ import org.hibernate.annotations.Immutable;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "CITY")
+@Table(name = "city")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
@@ -38,7 +38,7 @@ public class City implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "CITY_ID")
+	@Column(name = "city_id")
 	public Long getId() {
 		return id;
 	}
@@ -47,7 +47,7 @@ public class City implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "NAME")
+	@Column(name = "name")
 	@NotEmpty
 	@Size(max = 75)
 	public String getName() {
@@ -59,7 +59,7 @@ public class City implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "STATE_ID")
+	@JoinColumn(name = "state_id")
 	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	public State getState() {
 		return state;

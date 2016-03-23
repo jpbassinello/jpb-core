@@ -28,7 +28,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.com.jpb.enums.StateUf;
 
 @Entity
-@Table(name = "STATE")
+@Table(name = "state")
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
@@ -44,7 +44,7 @@ public class State implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "STATE_ID")
+	@Column(name = "state_id")
 	public Long getId() {
 		return id;
 	}
@@ -53,7 +53,7 @@ public class State implements Serializable {
 		this.id = id;
 	}
 
-	@Column(name = "NAME")
+	@Column(name = "name")
 	@NotEmpty
 	@Size(max = 75)
 	public String getName() {
@@ -64,7 +64,7 @@ public class State implements Serializable {
 		this.name = name;
 	}
 
-	@Column(name = "UF")
+	@Column(name = "uf")
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	public StateUf getUf() {
@@ -76,7 +76,7 @@ public class State implements Serializable {
 	}
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "COUNTRY_ID")
+	@JoinColumn(name = "country_id")
 	@NotNull
 	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 	public Country getCountry() {

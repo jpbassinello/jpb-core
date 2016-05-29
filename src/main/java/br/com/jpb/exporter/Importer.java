@@ -1,20 +1,16 @@
 package br.com.jpb.exporter;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.YearMonth;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Importer<T> extends BaseExporterImporter<T> {
 
@@ -61,6 +57,7 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 				if (obj == null) {
 					continue;
 				}
+				obj = obj.trim();
 
 				ExporterDateTime dateTime = column
 						.getAnnotation(ExporterDateTime.class);

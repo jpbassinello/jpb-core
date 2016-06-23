@@ -15,7 +15,8 @@ import br.com.jpb.util.MessageUtil;
 public enum Gender {
 
 	MALE("male"),
-	FEMALE("female");
+	FEMALE("female"),
+	UNKNOWN("unknown");
 
 	private Gender(String value) {
 		this.value = value;

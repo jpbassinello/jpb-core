@@ -3,11 +3,7 @@ package br.com.jpb.exporter.excel;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -125,9 +121,26 @@ public class ExcelExporter<T> extends Exporter<T> {
 	@Override
 	protected void writeTheFile(OutputStream os) {
 		try {
+			autoSizeColumns(wb);
 			wb.write(os);
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while writing the file", e);
+		}
+	}
+
+	private void autoSizeColumns(Workbook workbook) {
+		int numberOfSheets = workbook.getNumberOfSheets();
+		for (int i = 0; i < numberOfSheets; i++) {
+			Sheet sheet = workbook.getSheetAt(i);
+			if (sheet.getPhysicalNumberOfRows() > 0) {
+				Row row = sheet.getRow(0);
+				Iterator<Cell> cellIterator = row.cellIterator();
+				while (cellIterator.hasNext()) {
+					Cell cell = cellIterator.next();
+					int columnIndex = cell.getColumnIndex();
+					sheet.autoSizeColumn(columnIndex);
+				}
+			}
 		}
 	}
 

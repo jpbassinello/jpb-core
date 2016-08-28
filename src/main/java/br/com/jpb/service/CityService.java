@@ -21,8 +21,7 @@ public class CityService {
 	private EntityManager em;
 
 	public List<City> findAll() {
-		TypedQuery<City> query = em.createQuery("SELECT c FROM City c", City
-				.class);
+		TypedQuery<City> query = em.createQuery("SELECT c FROM City c", City.class);
 		query.setHint(QueryHints.CACHEABLE, true);
 		query.setHint(QueryHints.CACHE_REGION, "city.findAll");
 
@@ -34,12 +33,10 @@ public class CityService {
 	}
 
 	public List<City> findByState(final StateUf uf) {
-		return findAll().stream().filter(city -> city.getState().getUf() ==
-				uf).collect(Collectors.toList());
+		return findAll().stream().filter(city -> city.getState().getUf() == uf).collect(Collectors.toList());
 	}
 
 	public City findById(long id) {
-		return findAll().stream().filter(city -> city.getId() == id).findFirst
-				().orElse(null);
+		return findAll().stream().filter(city -> city.getId() == id).findFirst().orElse(null);
 	}
 }

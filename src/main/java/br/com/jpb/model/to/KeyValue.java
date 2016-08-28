@@ -7,7 +7,6 @@ package br.com.jpb.model.to;
 import java.util.Objects;
 
 /**
- *
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class KeyValue {

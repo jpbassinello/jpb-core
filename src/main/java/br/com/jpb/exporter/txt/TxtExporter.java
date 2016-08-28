@@ -1,22 +1,14 @@
 package br.com.jpb.exporter.txt;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
+import br.com.jpb.exporter.Exporter;
+import com.google.common.base.Joiner;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import com.google.common.base.Joiner;
-
-import br.com.jpb.exporter.Exporter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.*;
 
 public class TxtExporter<T> extends Exporter<T> {
 
@@ -80,10 +72,8 @@ public class TxtExporter<T> extends Exporter<T> {
 	}
 
 	@Override
-	protected void writeColumn(Date value, String dateFormat, int rowIndex,
-			int colIndex) {
-		getLine(rowIndex).add(DateTimeFormat.forPattern(dateFormat)
-				.print(LocalDateTime.fromDateFields(value)));
+	protected void writeColumn(Date value, String dateFormat, int rowIndex, int colIndex) {
+		getLine(rowIndex).add(DateTimeFormat.forPattern(dateFormat).print(LocalDateTime.fromDateFields(value)));
 	}
 
 	@Override
@@ -98,8 +88,7 @@ public class TxtExporter<T> extends Exporter<T> {
 
 	@Override
 	protected void writeColumn(String value, int rowIndex, int colIndex) {
-		getLine(rowIndex).add(QUOTES
-				+ value.replaceAll("\"", "\\\"").replaceAll("\n", "") + QUOTES);
+		getLine(rowIndex).add(QUOTES + value.replaceAll("\"", "\\\"").replaceAll("\n", "") + QUOTES);
 	}
 
 	private List<String> getLine(int rowIndex) {
@@ -125,8 +114,7 @@ public class TxtExporter<T> extends Exporter<T> {
 			os.write(joiner.join(line).getBytes(Charset.defaultCharset()));
 			os.write(lineSeparator.getBytes(Charset.defaultCharset()));
 		} catch (IOException e) {
-			throw new IllegalStateException("Error while writing to the file",
-					e);
+			throw new IllegalStateException("Error while writing to the file", e);
 		}
 	}
 

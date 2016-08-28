@@ -1,17 +1,16 @@
 package br.com.jpb.util;
 
+import com.google.common.base.MoreObjects;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import com.google.common.base.MoreObjects;
-
 public final class MathUtil {
-
-	private MathUtil() {
-	}
 
 	private static final int DEFAULT_SCALE = 6;
 	private static final RoundingMode DEFAULT_ROUNDING = RoundingMode.HALF_UP;
+	private MathUtil() {
+	}
 
 	public static BigDecimal divide(int x, int y) {
 		return divide(BigDecimal.valueOf(x), BigDecimal.valueOf(y));
@@ -22,8 +21,7 @@ public final class MathUtil {
 	}
 
 	public static BigDecimal divide(BigDecimal x, BigDecimal y) {
-		if (y.compareTo(BigDecimal.ZERO) == 0
-				|| x.compareTo(BigDecimal.ZERO) == 0) {
+		if (y.compareTo(BigDecimal.ZERO) == 0 || x.compareTo(BigDecimal.ZERO) == 0) {
 			return BigDecimal.ZERO;
 		}
 		/**

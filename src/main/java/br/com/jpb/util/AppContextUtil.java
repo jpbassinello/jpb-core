@@ -8,7 +8,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * 
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class AppContextUtil {

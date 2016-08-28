@@ -4,18 +4,16 @@
  */
 package br.com.jpb.dao;
 
-import java.util.List;
+import br.com.jpb.util.JpaUtil;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-
-import br.com.jpb.util.JpaUtil;
+import java.util.List;
 
 /**
- * 
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 @Named
@@ -95,7 +93,7 @@ public class GenericDao {
 	public void truncateTable(String entityName) {
 		em.createQuery("DELETE FROM " + entityName).executeUpdate();
 	}
-	
+
 	public EntityManager getEm() {
 		return em;
 	}

@@ -1,21 +1,15 @@
 package br.com.jpb.exporter.excel;
 
+import br.com.jpb.exporter.Importer;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
-
-import br.com.jpb.exporter.Importer;
 
 public class ExcelImporter<T> extends Importer<T> {
 
@@ -47,8 +41,7 @@ public class ExcelImporter<T> extends Importer<T> {
 		try {
 			wb = getWorkbook(is);
 		} catch (IOException e) {
-			throw new IllegalStateException(
-					"Error while get workbook from Input Stream", e);
+			throw new IllegalStateException("Error while get workbook from Input Stream", e);
 		}
 		sheet = wb.getSheetAt(this.sheetNumber);
 	}
@@ -64,46 +57,39 @@ public class ExcelImporter<T> extends Importer<T> {
 				continue;
 			}
 			List<String> columns = new ArrayList<>();
-			for (int colIndex = 0; colIndex < row
-					.getLastCellNum(); colIndex++) {
+			for (int colIndex = 0; colIndex < row.getLastCellNum(); colIndex++) {
 				Cell cell = row.getCell(colIndex);
-				if (cell == null
-						|| cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+				if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
 					columns.add(null);
 					continue;
 				}
 				try {
 					switch (cell.getCellType()) {
-					case Cell.CELL_TYPE_STRING:
-						columns.add(cell.getStringCellValue());
-						break;
-					case Cell.CELL_TYPE_NUMERIC:
-						if (DateUtil.isCellDateFormatted(cell)) {
-							columns.add(Long
-									.valueOf(cell.getDateCellValue().getTime())
-									.toString());
-						} else {
-							double d = cell.getNumericCellValue();
-							if (d % 1 == 0) {
-								columns.add(Long
-										.valueOf(Double.valueOf(d).longValue())
-										.toString());
+						case Cell.CELL_TYPE_STRING:
+							columns.add(cell.getStringCellValue());
+							break;
+						case Cell.CELL_TYPE_NUMERIC:
+							if (DateUtil.isCellDateFormatted(cell)) {
+								columns.add(Long.valueOf(cell.getDateCellValue().getTime()).toString());
 							} else {
-								columns.add(Double.valueOf(d).toString());
+								double d = cell.getNumericCellValue();
+								if (d % 1 == 0) {
+									columns.add(Long.valueOf(Double.valueOf(d).longValue()).toString());
+								} else {
+									columns.add(Double.valueOf(d).toString());
+								}
 							}
-						}
-						break;
-					case Cell.CELL_TYPE_BOOLEAN:
-						columns.add(Boolean.valueOf(cell.getBooleanCellValue())
-								.toString());
-						break;
-					default:
-						break;
+							break;
+						case Cell.CELL_TYPE_BOOLEAN:
+							columns.add(Boolean.valueOf(cell.getBooleanCellValue()).toString());
+							break;
+						default:
+							break;
 					}
 				} catch (Exception e) {
 					throw new IllegalStateException(String.format(
-							"Error while adding cell value to List. Problably a developer error. "
-									+ "Check your bean types and annotations. Excel [Row, Col]: [%s, %s]",
+							"Error while adding cell value to List. Problably a developer error. " + "Check your bean " +
+									"types and annotations. Excel [Row, Col]: [%s, %s]",
 							rowIndex, colIndex), e);
 				}
 			}

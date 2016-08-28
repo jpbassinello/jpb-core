@@ -1,10 +1,10 @@
 package br.com.jpb.util;
 
-import java.util.Map;
-import java.util.Set;
-
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.Element;
+
+import java.util.Map;
+import java.util.Set;
 
 public class EhCacheUtil {
 

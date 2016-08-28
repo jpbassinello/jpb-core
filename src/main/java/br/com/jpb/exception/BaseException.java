@@ -7,7 +7,6 @@ package br.com.jpb.exception;
 import br.com.jpb.util.MessageUtil;
 
 /**
- *
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public abstract class BaseException extends Exception {

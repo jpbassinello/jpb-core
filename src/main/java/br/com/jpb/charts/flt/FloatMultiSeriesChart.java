@@ -1,11 +1,10 @@
 package br.com.jpb.charts.flt;
 
+import br.com.jpb.charts.TwoAxisValue;
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import br.com.jpb.charts.TwoAxisValue;
-
-import com.google.common.base.Joiner;
 
 public abstract class FloatMultiSeriesChart extends FloatChart {
 
@@ -13,25 +12,8 @@ public abstract class FloatMultiSeriesChart extends FloatChart {
 
 	private static final String DATA_FORMAT = "[%s, %s]";
 
-	public abstract String getLabelAxisX();
-
-	public abstract String getLabelAxisY();
-
-	protected String data(long... values) {
-		final List<String> datas = new ArrayList<>();
-		for (int i = 0; i < values.length; i++) {
-			datas.add(String.format(DATA_FORMAT, i, values[i]));
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("[");
-		sb.append(JOINER.join(datas));
-		sb.append("]");
-		return sb.toString();
-	}
-
-	public static FloatMultiSeriesChart twoAxisChart(
-			final List<TwoAxisValue> twoAxisValues,
-			final List<String> colors, String labelAxisX, String labelAxisY) {
+	public static FloatMultiSeriesChart twoAxisChart(final List<TwoAxisValue> twoAxisValues, final List<String> colors,
+			String labelAxisX, String labelAxisY) {
 		return new FloatMultiSeriesChart() {
 			@Override
 			public String getData() {
@@ -74,5 +56,21 @@ public abstract class FloatMultiSeriesChart extends FloatChart {
 				return singleQuote(labelAxisY);
 			}
 		};
+	}
+
+	public abstract String getLabelAxisX();
+
+	public abstract String getLabelAxisY();
+
+	protected String data(long... values) {
+		final List<String> datas = new ArrayList<>();
+		for (int i = 0; i < values.length; i++) {
+			datas.add(String.format(DATA_FORMAT, i, values[i]));
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		sb.append(JOINER.join(datas));
+		sb.append("]");
+		return sb.toString();
 	}
 }

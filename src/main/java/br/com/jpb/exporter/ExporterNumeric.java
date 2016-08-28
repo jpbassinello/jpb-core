@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 import java.math.RoundingMode;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.FIELD })
+@Target({ElementType.FIELD})
 public @interface ExporterNumeric {
 
 	int scale() default 0;

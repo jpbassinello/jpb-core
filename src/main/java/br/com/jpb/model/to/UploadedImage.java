@@ -3,7 +3,6 @@ package br.com.jpb.model.to;
 import java.io.Serializable;
 
 /**
- *
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class UploadedImage implements Serializable {
@@ -13,8 +12,7 @@ public class UploadedImage implements Serializable {
 	private String thumbFull;
 	private String extension;
 
-	public UploadedImage(String original, String originalFull,
-			String thumbFull, String extension) {
+	public UploadedImage(String original, String originalFull, String thumbFull, String extension) {
 		this.original = original;
 		this.originalFull = originalFull;
 		this.thumbFull = thumbFull;

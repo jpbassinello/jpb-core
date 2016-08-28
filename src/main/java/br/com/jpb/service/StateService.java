@@ -18,8 +18,7 @@ public class StateService {
 	private EntityManager em;
 
 	public List<State> findAll() {
-		TypedQuery<State> query = em.createQuery("SELECT s FROM State s",
-				State.class);
+		TypedQuery<State> query = em.createQuery("SELECT s FROM State s", State.class);
 		query.setHint(QueryHints.CACHEABLE, true);
 		query.setHint(QueryHints.CACHE_REGION, "state.findAll");
 
@@ -27,7 +26,6 @@ public class StateService {
 	}
 
 	public State findById(long id) {
-		return findAll().stream().filter(state -> state.getId() == id)
-				.findFirst().orElse(null);
+		return findAll().stream().filter(state -> state.getId() == id).findFirst().orElse(null);
 	}
 }

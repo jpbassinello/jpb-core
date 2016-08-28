@@ -1,20 +1,16 @@
 package br.com.jpb.exporter;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.YearMonth;
+
+import java.io.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.YearMonth;
 
 public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
@@ -32,17 +28,13 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
 	protected abstract void writeEmptyColumn(int rowIndex, int colIndex);
 
-	protected abstract void writeColumn(Date value, String dateFormat,
-			int rowIndex, int colIndex);
+	protected abstract void writeColumn(Date value, String dateFormat, int rowIndex, int colIndex);
 
-	protected abstract void writeColumn(double value, int rowIndex,
-			int colIndex);
+	protected abstract void writeColumn(double value, int rowIndex, int colIndex);
 
-	protected abstract void writeColumn(boolean value, int rowIndex,
-			int colIndex);
+	protected abstract void writeColumn(boolean value, int rowIndex, int colIndex);
 
-	protected abstract void writeColumn(String value, int rowIndex,
-			int colIndex);
+	protected abstract void writeColumn(String value, int rowIndex, int colIndex);
 
 	protected abstract void writeTheFile(OutputStream os);
 
@@ -65,8 +57,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 		for (int i = 0; i < data.size(); i++) {
 			int rowIndex = i + 1;
 			Map<Integer, Field> fieldsByIndex = getColumnsFieldsAnnotatedWithColumnGroupByIndex();
-			int maxIndex = fieldsByIndex.keySet().stream()
-					.max(Comparator.naturalOrder()).orElse(0);
+			int maxIndex = fieldsByIndex.keySet().stream().max(Comparator.naturalOrder()).orElse(0);
 			int colIndex = -1;
 			for (int j = 0; j <= maxIndex; j++) {
 				Field column = fieldsByIndex.get(j);
@@ -82,24 +73,19 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 					continue;
 				}
 
-				ExporterDateTime dateTime = column
-						.getAnnotation(ExporterDateTime.class);
+				ExporterDateTime dateTime = column.getAnnotation(ExporterDateTime.class);
 				if (dateTime != null) {
-					writeColumn(dateCellValue(obj, dateTime), dateTime.format(),
-							rowIndex, colIndex);
+					writeColumn(dateCellValue(obj, dateTime), dateTime.format(), rowIndex, colIndex);
 					continue;
 				}
 
-				ExporterNumeric numeric = column
-						.getAnnotation(ExporterNumeric.class);
+				ExporterNumeric numeric = column.getAnnotation(ExporterNumeric.class);
 				if (numeric != null) {
-					writeColumn(numericCellValue(obj, numeric), rowIndex,
-							colIndex);
+					writeColumn(numericCellValue(obj, numeric), rowIndex, colIndex);
 					continue;
 				}
 
-				if (Boolean.class.equals(column.getType())
-						|| boolean.class.equals(column.getType())) {
+				if (Boolean.class.equals(column.getType()) || boolean.class.equals(column.getType())) {
 					writeColumn((Boolean) obj, rowIndex, colIndex);
 					continue;
 				}
@@ -110,8 +96,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 				}
 
 				throw new IllegalStateException(
-						"Invalid configuration. Return type " + column.getType()
-								+ " is not allowed.");
+						"Invalid configuration. Return type " + column.getType() + " is not allowed.");
 			}
 
 		}
@@ -124,16 +109,13 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 	protected File createFile(String fileName) {
 		File file;
 		try {
-			file = new File(System.getProperty("java.io.tmpdir")
-					+ System.getProperty("file.separator") + fileName);
-			BufferedOutputStream fos = new BufferedOutputStream(
-					new FileOutputStream(file));
+			file = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + fileName);
+			BufferedOutputStream fos = new BufferedOutputStream(new FileOutputStream(file));
 			writeTheFile(fos);
 			fos.close();
 			close();
 		} catch (IOException e) {
-			throw new IllegalStateException("Erro while closing the streams",
-					e);
+			throw new IllegalStateException("Erro while closing the streams", e);
 		}
 		return file;
 	}
@@ -141,12 +123,10 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 	private double numericCellValue(Object obj, ExporterNumeric numeric) {
 		double value = 0;
 		if (obj instanceof Integer) {
-			value = defaultScaleAndRounding(BigDecimal.valueOf((Integer) obj),
-					numeric);
+			value = defaultScaleAndRounding(BigDecimal.valueOf((Integer) obj), numeric);
 		}
 		if (obj instanceof Long) {
-			value = defaultScaleAndRounding(BigDecimal.valueOf((Long) obj),
-					numeric);
+			value = defaultScaleAndRounding(BigDecimal.valueOf((Long) obj), numeric);
 		}
 		if (obj instanceof BigDecimal) {
 			value = defaultScaleAndRounding((BigDecimal) obj, numeric);
@@ -154,10 +134,8 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 		return value;
 	}
 
-	private double defaultScaleAndRounding(BigDecimal bigDecimal,
-			ExporterNumeric numeric) {
-		return bigDecimal.setScale(numeric.scale(), numeric.roundingMode())
-				.doubleValue();
+	private double defaultScaleAndRounding(BigDecimal bigDecimal, ExporterNumeric numeric) {
+		return bigDecimal.setScale(numeric.scale(), numeric.roundingMode()).doubleValue();
 	}
 
 	private Date dateCellValue(Object obj, ExporterDateTime dateTime) {

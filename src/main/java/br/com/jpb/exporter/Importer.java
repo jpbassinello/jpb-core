@@ -22,8 +22,7 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 
 	public List<T> importFile(File file) {
 		try {
-			return importFile(
-					new BufferedInputStream(new FileInputStream(file)));
+			return importFile(new BufferedInputStream(new FileInputStream(file)));
 		} catch (FileNotFoundException e) {
 			throw new IllegalStateException("Error while reading the file", e);
 		}
@@ -59,8 +58,7 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 				}
 				obj = obj.trim();
 
-				ExporterDateTime dateTime = column
-						.getAnnotation(ExporterDateTime.class);
+				ExporterDateTime dateTime = column.getAnnotation(ExporterDateTime.class);
 				if (dateTime != null) {
 					try {
 						dateTimeAsLdtLong(t, column, type, obj);
@@ -73,8 +71,7 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 					continue;
 				}
 
-				ExporterNumeric numeric = column
-						.getAnnotation(ExporterNumeric.class);
+				ExporterNumeric numeric = column.getAnnotation(ExporterNumeric.class);
 				if (numeric != null) {
 					double value = Double.parseDouble((String) obj);
 					if (Integer.class.equals(type) || int.class.equals(type)) {
@@ -84,14 +81,13 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 						columnSet(t, column, Double.valueOf(value).longValue());
 					}
 					if (BigDecimal.class.equals(type)) {
-						columnSet(t, column, BigDecimal.valueOf(value).setScale(
-								numeric.scale(), numeric.roundingMode()));
+						columnSet(t, column,
+								BigDecimal.valueOf(value).setScale(numeric.scale(), numeric.roundingMode()));
 					}
 					continue;
 				}
 
-				if (Boolean.class.equals(column.getType())
-						|| boolean.class.equals(column.getType())) {
+				if (Boolean.class.equals(column.getType()) || boolean.class.equals(column.getType())) {
 					boolean value = Boolean.valueOf(obj);
 					columnSet(t, column, value);
 					continue;
@@ -108,8 +104,7 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 		return list;
 	}
 
-	private void dateTimeAsLdtLong(T t, Field column, Class<?> type,
-			String obj) {
+	private void dateTimeAsLdtLong(T t, Field column, Class<?> type, String obj) {
 		long value = Long.valueOf(obj);
 		if (LocalDateTime.class.equals(type)) {
 			LocalDateTime ldt = new LocalDateTime(value);
@@ -121,11 +116,9 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 		}
 	}
 
-	private void dateTimeAsString(T t, Field column, Class<?> type, String obj,
-			ExporterDateTime dateTime) {
+	private void dateTimeAsString(T t, Field column, Class<?> type, String obj, ExporterDateTime dateTime) {
 		String date = (String) obj;
-		DateTimeFormatter formatter = DateTimeFormat
-				.forPattern(dateTime.format());
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(dateTime.format());
 		if (LocalDateTime.class.equals(type)) {
 			columnSet(t, column, formatter.parseLocalDateTime(date));
 		}

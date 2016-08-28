@@ -4,23 +4,21 @@
  */
 package br.com.jpb.exporter.test;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
+import br.com.jpb.exporter.ExporterColumn;
+import br.com.jpb.exporter.ExporterDateTime;
+import br.com.jpb.exporter.ExporterNumeric;
+import br.com.jpb.exporter.excel.ExcelImporter;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.LocalDate;
 import org.junit.Assert;
 import org.junit.Test;
 
-import br.com.jpb.exporter.ExporterColumn;
-import br.com.jpb.exporter.ExporterDateTime;
-import br.com.jpb.exporter.ExporterNumeric;
-import br.com.jpb.exporter.excel.ExcelImporter;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * 
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class ExcelImportTest {
@@ -29,16 +27,13 @@ public class ExcelImportTest {
 	public void testImport() {
 
 		List<TestPojo> expected = new ArrayList<>();
-		expected.add(
-				new TestPojo(null, "abc", 123, new LocalDate(1985, 4, 10)));
+		expected.add(new TestPojo(null, "abc", 123, new LocalDate(1985, 4, 10)));
 		expected.add(new TestPojo(1, "def", null, new LocalDate(1988, 5, 24)));
 		expected.add(new TestPojo(2, "ghi", 456, null));
 
-		File file = FileUtils
-				.toFile(getClass().getResource("/excel/excel-test-1.xlsx"));
+		File file = FileUtils.toFile(getClass().getResource("/excel/excel-test-1.xlsx"));
 
-		List<TestPojo> processed = new ExcelImporter<>(TestPojo.class)
-				.importFile(file);
+		List<TestPojo> processed = new ExcelImporter<>(TestPojo.class).importFile(file);
 
 		Assert.assertEquals(expected, processed);
 
@@ -104,9 +99,8 @@ public class ExcelImportTest {
 				return false;
 			}
 			TestPojo other = (TestPojo) obj;
-			return Objects.equals(c1, other.c1) && Objects.equals(c2, other.c2)
-					&& Objects.equals(c3, other.c3)
-					&& Objects.equals(c5, other.c5);
+			return Objects.equals(c1, other.c1) && Objects.equals(c2, other.c2) && Objects
+					.equals(c3, other.c3) && Objects.equals(c5, other.c5);
 		}
 
 	}

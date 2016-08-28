@@ -1,27 +1,18 @@
 package br.com.jpb.model.entity;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Objects;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
+import br.com.jpb.util.DateTimeUtil;
+import br.com.jpb.util.ValidationUtil;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import br.com.jpb.util.DateTimeUtil;
-import br.com.jpb.util.ValidationUtil;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "CONTACT_US")
@@ -59,10 +50,8 @@ public class ContactUs implements Serializable {
 
 	@Column(name = "EMAIL")
 	@NotEmpty(message = "Forneça um endereço de e-mail válido")
-	@Size(max = 255, message = "Forneça um endereço de e-mail com no máximo "
-			+ "{max} caracteres")
-	@Pattern(regexp = ValidationUtil.REGEXP_EMAIL, message = "Forneça um " +
-			"endereço de e-mail válido")
+	@Size(max = 255, message = "Forneça um endereço de e-mail com no máximo " + "{max} caracteres")
+	@Pattern(regexp = ValidationUtil.REGEXP_EMAIL, message = "Forneça um " + "endereço de e-mail válido")
 	public String getEmail() {
 		return email;
 	}
@@ -73,8 +62,7 @@ public class ContactUs implements Serializable {
 
 	@Column(name = "NAME")
 	@NotEmpty(message = "Forneça um nome válido")
-	@Size(max = 255, message = "Forneça um nome com no máximo {max} " +
-			"caracteres")
+	@Size(max = 255, message = "Forneça um nome com no máximo {max} " + "caracteres")
 	public String getName() {
 		return name;
 	}
@@ -85,8 +73,7 @@ public class ContactUs implements Serializable {
 
 	@Column(name = "SUBJECT")
 	@NotEmpty(message = "Forneça um assunto válido")
-	@Size(max = 255, message = "Forneça um assunto com no máximo {max} " +
-			"caracteres")
+	@Size(max = 255, message = "Forneça um assunto com no máximo {max} " + "caracteres")
 	public String getSubject() {
 		return subject;
 	}
@@ -97,8 +84,7 @@ public class ContactUs implements Serializable {
 
 	@Column(name = "TEXT")
 	@NotEmpty(message = "Forneça uma mensagem válida")
-	@Size(max = 10000, message = "Forneça uma mensagem com no máximo {max} " +
-			"caracteres")
+	@Size(max = 10000, message = "Forneça uma mensagem com no máximo {max} " + "caracteres")
 	public String getText() {
 		return text;
 	}
@@ -140,7 +126,6 @@ public class ContactUs implements Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle
-				.MULTI_LINE_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

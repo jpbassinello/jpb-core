@@ -40,8 +40,7 @@ public class AwsS3File implements Serializable {
 		this.folder = folder;
 		this.name = Files.getNameWithoutExtension(fileName);
 		this.extension = Files.getFileExtension(fileName);
-		this.hash = StringUtil.encode(String.valueOf(System.currentTimeMillis
-				()), MD5_HASH_SIZE);
+		this.hash = StringUtil.encode(String.valueOf(System.currentTimeMillis()), MD5_HASH_SIZE);
 		this.userCreate = userCreate;
 		this.createDateTime = now;
 	}
@@ -152,7 +151,6 @@ public class AwsS3File implements Serializable {
 
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle
-				.MULTI_LINE_STYLE);
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}
 }

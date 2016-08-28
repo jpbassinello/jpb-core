@@ -1,26 +1,18 @@
 package br.com.jpb.exporter.excel;
 
+import br.com.jpb.exporter.Exporter;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-
-import br.com.jpb.exporter.Exporter;
-
 public class ExcelExporter<T> extends Exporter<T> {
 
 	private static final int MAX_TEXT_COLUMN_SIZE = 32767;
-
+	private final Map<Integer, Row> rowByIndex = new HashMap<>();
 	private String sheetName = "Dados";
 	private Workbook wb;
 	private Sheet sheet;
@@ -28,8 +20,6 @@ public class ExcelExporter<T> extends Exporter<T> {
 	private CellStyle headerCellStyle;
 	private CellStyle defaultCellStyle;
 	private Map<String, CellStyle> dateTimeStylesByFormatter = new HashMap<>();
-
-	private final Map<Integer, Row> rowByIndex = new HashMap<>();
 
 	public ExcelExporter(Class<T> clazz) {
 		super(clazz);
@@ -78,15 +68,13 @@ public class ExcelExporter<T> extends Exporter<T> {
 	}
 
 	@Override
-	protected void writeColumn(Date value, String dateFormat, int rowIndex,
-			int colIndex) {
+	protected void writeColumn(Date value, String dateFormat, int rowIndex, int colIndex) {
 
 		CellStyle dateTimeCellStyle = dateTimeStylesByFormatter.get(dateFormat);
 		if (dateTimeCellStyle == null) {
 			dateTimeCellStyle = defaultCellStyle(wb);
 			CreationHelper createHelper = wb.getCreationHelper();
-			dateTimeCellStyle.setDataFormat(
-					createHelper.createDataFormat().getFormat(dateFormat));
+			dateTimeCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
 
 			dateTimeStylesByFormatter.put(dateFormat, dateTimeCellStyle);
 		}
@@ -149,8 +137,7 @@ public class ExcelExporter<T> extends Exporter<T> {
 		try {
 			wb.close();
 		} catch (IOException e) {
-			throw new IllegalStateException("Error while closing the WorkBook",
-					e);
+			throw new IllegalStateException("Error while closing the WorkBook", e);
 		}
 	}
 
@@ -172,8 +159,7 @@ public class ExcelExporter<T> extends Exporter<T> {
 
 	private CellStyle defaultHeaderStyle(Workbook wb) {
 		CellStyle headerStyle = defaultCellStyle(wb);
-		headerStyle.setFillForegroundColor(
-				IndexedColors.GREY_25_PERCENT.getIndex());
+		headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
 		headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		Font font = wb.createFont();
 		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
@@ -195,8 +181,7 @@ public class ExcelExporter<T> extends Exporter<T> {
 		return style;
 	}
 
-	public File exportDataMatrixToFile(List<String> headers,
-			List<List<String>> matrix, String fileName) {
+	public File exportDataMatrixToFile(List<String> headers, List<List<String>> matrix, String fileName) {
 		init();
 
 		initHeader();

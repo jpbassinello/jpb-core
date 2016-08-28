@@ -7,13 +7,11 @@ package br.com.jpb.enums;
 import br.com.jpb.util.MessageUtil;
 
 /**
- *
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public enum YesOrNo implements ValueLabelEnum {
 
-	YES("yes"),
-	NO("no");
+	YES("yes"), NO("no");
 
 	private final String label;
 

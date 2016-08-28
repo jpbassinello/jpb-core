@@ -7,13 +7,11 @@ package br.com.jpb.enums;
 import br.com.jpb.util.MessageUtil;
 
 /**
- *
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public enum TrueOrFalse implements ValueLabelEnum {
 
-	TRUE("true"),
-	FALSE("false");
+	TRUE("true"), FALSE("false");
 
 	private final String label;
 

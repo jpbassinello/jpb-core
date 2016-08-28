@@ -1,11 +1,10 @@
 package br.com.jpb.charts.morris;
 
+import br.com.jpb.charts.TwoAxisValue;
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import br.com.jpb.charts.TwoAxisValue;
-
-import com.google.common.base.Joiner;
 
 public abstract class MorrisMultiSeriesChart extends MorrisChart {
 
@@ -13,30 +12,11 @@ public abstract class MorrisMultiSeriesChart extends MorrisChart {
 
 	private static final String DATA_FORMAT = "%s : '%s'";
 
-	public abstract String getXKey();
-
-	public abstract String getYKeys();
-
-	public abstract String getLabels();
-
-	protected String data(String[] keys, Object[] values) {
-		final List<String> datas = new ArrayList<>();
-		for (int i = 0; i < keys.length; i++) {
-			datas.add(String.format(DATA_FORMAT, keys[i], values[i]));
-		}
-		StringBuilder sb = new StringBuilder();
-		sb.append("{");
-		sb.append(JOINER.join(datas));
-		sb.append("}");
-		return sb.toString();
-	}
-
-	public static MorrisMultiSeriesChart twoAxisChart(
-			final List<TwoAxisValue> twoAxisValues,
+	public static MorrisMultiSeriesChart twoAxisChart(final List<TwoAxisValue> twoAxisValues,
 			final List<String> colors) {
 		return new MorrisMultiSeriesChart() {
 
-			final String[] keys = { "x", "y" };
+			final String[] keys = {"x", "y"};
 
 			@Override
 			public String getData() {
@@ -44,8 +24,7 @@ public abstract class MorrisMultiSeriesChart extends MorrisChart {
 				sb.append("[");
 				final List<String> dataByMonitor = new ArrayList<>();
 				for (TwoAxisValue twoAxisValue : twoAxisValues) {
-					String[] values = { twoAxisValue.getX(),
-							twoAxisValue.getY() };
+					String[] values = {twoAxisValue.getX(), twoAxisValue.getY()};
 					dataByMonitor.add(data(keys, values));
 				}
 				sb.append(JOINER.join(dataByMonitor));
@@ -84,5 +63,23 @@ public abstract class MorrisMultiSeriesChart extends MorrisChart {
 				return "[" + singleQuote("Total") + "]";
 			}
 		};
+	}
+
+	public abstract String getXKey();
+
+	public abstract String getYKeys();
+
+	public abstract String getLabels();
+
+	protected String data(String[] keys, Object[] values) {
+		final List<String> datas = new ArrayList<>();
+		for (int i = 0; i < keys.length; i++) {
+			datas.add(String.format(DATA_FORMAT, keys[i], values[i]));
+		}
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append(JOINER.join(datas));
+		sb.append("}");
+		return sb.toString();
 	}
 }

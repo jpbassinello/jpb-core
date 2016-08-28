@@ -9,13 +9,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- *
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class MessageUtil {
 
-	private static final ResourceBundle baseBundle = ResourceBundle
-			.getBundle("br/com/jpb/bundles/messages");
+	private static final ResourceBundle baseBundle = ResourceBundle.getBundle("br/com/jpb/bundles/messages");
 	private static final List<ResourceBundle> bundles = new ArrayList<>();
 
 	public static void addBundle(String baseName) {

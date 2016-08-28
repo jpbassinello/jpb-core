@@ -1,5 +1,8 @@
 package br.com.jpb.exporter.txt;
 
+import au.com.bytecode.opencsv.CSVReader;
+import br.com.jpb.exporter.Importer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,9 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import au.com.bytecode.opencsv.CSVReader;
-import br.com.jpb.exporter.Importer;
 
 public class TxtImporter<T> extends Importer<T> {
 
@@ -48,9 +48,7 @@ public class TxtImporter<T> extends Importer<T> {
 	@Override
 	protected List<List<String>> rows(int rowsInHeader) {
 
-		CSVReader reader = new CSVReader(
-				new BufferedReader(
-						new InputStreamReader(is, Charset.defaultCharset())),
+		CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(is, Charset.defaultCharset())),
 				separator, QUOTES, rowsInHeader);
 		List<String[]> lines = new ArrayList<>();
 		String[] nextLine;
@@ -63,8 +61,7 @@ public class TxtImporter<T> extends Importer<T> {
 			throw new IllegalStateException("Error while reading TXT", e);
 		}
 
-		return lines.stream().map(colsArray -> Arrays.asList(colsArray))
-				.collect(Collectors.toList());
+		return lines.stream().map(colsArray -> Arrays.asList(colsArray)).collect(Collectors.toList());
 	}
 
 }

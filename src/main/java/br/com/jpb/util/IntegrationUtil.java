@@ -1,20 +1,18 @@
 package br.com.jpb.util;
 
-import java.io.IOException;
-import java.util.Map;
-
+import com.google.common.base.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
-import com.google.common.base.Charsets;
+import java.io.IOException;
+import java.util.Map;
 
 public class IntegrationUtil {
 
-	public static String httpGet(String url, Map<String, String> parameters)
-			throws IOException {
+	public static String httpGet(String url, Map<String, String> parameters) throws IOException {
 
 		StringBuilder urlWithParams = new StringBuilder();
 		urlWithParams.append(url);
@@ -26,12 +24,10 @@ public class IntegrationUtil {
 		}
 
 		HttpClient client = HttpClientBuilder.create().build();
-		HttpGet request = new HttpGet(urlWithParams.toString().replaceFirst(
-				"&", "?"));
+		HttpGet request = new HttpGet(urlWithParams.toString().replaceFirst("&", "?"));
 
 		HttpResponse response = client.execute(request);
 
-		return IOUtils.toString(response.getEntity().getContent(),
-				Charsets.UTF_8.toString());
+		return IOUtils.toString(response.getEntity().getContent(), Charsets.UTF_8.toString());
 	}
 }

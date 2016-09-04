@@ -12,19 +12,17 @@ import java.util.List;
 
 @Named
 @Singleton
-public class StateService {
+public class StateService extends GenericService<State> {
 
 	@PersistenceContext
 	private EntityManager em;
 
+	@Override
 	public List<State> findAll() {
-		TypedQuery<State> query = em.createQuery("SELECT s FROM State s", State.class);
-		query.setHint(QueryHints.CACHEABLE, true);
-		query.setHint(QueryHints.CACHE_REGION, "state.findAll");
-
-		return query.getResultList();
+		return createJPAQuery("state.findAll").fetch();
 	}
 
+	@Override
 	public State findById(long id) {
 		return findAll().stream().filter(state -> state.getId() == id).findFirst().orElse(null);
 	}

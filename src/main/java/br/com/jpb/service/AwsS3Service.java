@@ -24,7 +24,7 @@ import java.net.URL;
 
 @Named
 @Singleton
-public class AwsS3Service {
+public class AwsS3Service extends GenericService<AwsS3File> {
 
 	private static final int NUMBER_OF_TRIES_TO_PUT_OBJECT = 3;
 	private final ResponseHeaderOverrides headerContentDispositionAttachment = new ResponseHeaderOverrides()

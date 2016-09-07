@@ -1,5 +1,6 @@
 package br.com.jpb.service;
 
+import br.com.jpb.model.entity.QState;
 import br.com.jpb.model.entity.State;
 import org.hibernate.annotations.QueryHints;
 
@@ -14,12 +15,9 @@ import java.util.List;
 @Singleton
 public class StateService extends GenericService<State> {
 
-	@PersistenceContext
-	private EntityManager em;
-
 	@Override
 	public List<State> findAll() {
-		return createJPAQuery("state.findAll").fetch();
+		return createJPAQuery("state.findAll").from(QState.state).fetch();
 	}
 
 	@Override

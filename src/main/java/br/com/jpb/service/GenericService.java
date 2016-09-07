@@ -1,6 +1,7 @@
 package br.com.jpb.service;
 
 import br.com.jpb.model.BaseEntity;
+import br.com.jpb.util.JpaUtil;
 import com.google.common.collect.Lists;
 import com.querydsl.jpa.impl.JPAQuery;
 import org.hibernate.Session;
@@ -110,32 +111,6 @@ public class GenericService<T extends BaseEntity> implements Serializable {
 		return query;
 	}
 
-	//	protected JPAQuery<T> createJPAQuery() {
-	//		return this.createJPAQuery((String) null);
-	//	}
-	//
-	//	protected JPAQuery<T> createJPAQuery(String cacheRegion) {
-	//		String name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, this.type.getSimpleName());
-	//		EntityPathBase<T> path = new EntityPathBase<>(this.type, name);
-	//		return this.createJPAQuery(path, cacheRegion);
-	//	}
-	//
-	//	protected <R> JPAQuery<R> createJPAQuery(EntityPath<R> path) {
-	//		return this.createJPAQuery(path, (String) null);
-	//	}
-	//
-	//	protected <R> JPAQuery<R> createJPAQuery(EntityPath<R> path, String cacheRegion) {
-	//		new JPAQuery<>()
-	//		JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(this.getEntityManager());
-	//		JPAQuery query = jpaQueryFactory.selectFrom(path);
-	//		if (cacheRegion != null) {
-	//			query.setHint(QueryHints.CACHEABLE, true);
-	//			query.setHint(QueryHints.CACHE_REGION, cacheRegion);
-	//		}
-	//
-	//		return query;
-	//	}
-
 	protected void flush() {
 		entityManager.flush();
 	}
@@ -149,11 +124,13 @@ public class GenericService<T extends BaseEntity> implements Serializable {
 	}
 
 	public List<T> findAll() {
-		return this.createJPAQuery().fetch();
+		return entityManager.createQuery("select o from " + getType().getSimpleName() + " o", getType())
+				.getResultList();
 	}
 
 	public long countAll() {
-		return this.createJPAQuery().fetchCount();
+		return JpaUtil.uniqueResultOrElse(
+				entityManager.createQuery("select count(*) from " + getType().getSimpleName() + " o", Long.class), 0L);
 	}
 
 	@Transactional

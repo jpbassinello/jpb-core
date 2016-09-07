@@ -2,6 +2,7 @@ package br.com.jpb.service;
 
 import br.com.jpb.enums.StateUf;
 import br.com.jpb.model.entity.City;
+import br.com.jpb.model.entity.QCity;
 import br.com.jpb.model.entity.State;
 
 import javax.inject.Named;
@@ -15,7 +16,7 @@ public class CityService extends GenericService<City> {
 
 	@Override
 	public List<City> findAll() {
-		return createJPAQuery("city.findAll").fetch();
+		return createJPAQuery("city.findAll").from(QCity.city).fetch();
 	}
 
 	public List<City> findByState(final State state) {

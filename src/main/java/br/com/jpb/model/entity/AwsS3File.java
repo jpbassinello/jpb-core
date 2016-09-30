@@ -12,6 +12,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.File;
 import java.util.Date;
 
 @Entity
@@ -60,6 +61,10 @@ public class AwsS3File implements BaseEntity {
 	@Column(name = "create_date_time")
 	@NotNull
 	private Date createDateTime;
+
+	@Transient
+	@Setter
+	private File original;
 
 	public AwsS3File(String folder, String fileName, String userCreate) {
 		Date now = DateTimeUtil.nowWithDateTimeInUTC().toDate();

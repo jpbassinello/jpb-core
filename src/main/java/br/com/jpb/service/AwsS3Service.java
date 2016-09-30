@@ -63,6 +63,7 @@ public class AwsS3Service extends GenericService<AwsS3File> {
 		om.setContentLength(file.length());
 
 		AwsS3File awsS3File = new AwsS3File(folder, file.getName(), userCreate);
+		awsS3File.setOriginal(file);
 
 		for (int i = 0; i < NUMBER_OF_TRIES_TO_PUT_OBJECT; i++) {
 			try {

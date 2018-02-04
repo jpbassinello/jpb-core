@@ -5,6 +5,7 @@
 package br.com.jpb.util;
 
 import com.google.common.collect.Range;
+import org.assertj.core.util.Strings;
 import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -33,22 +34,37 @@ public final class DateTimeUtil {
 	}
 
 	public static String getDefaultViewFormattedLocalDate(LocalDate date) {
+		if (date == null) {
+			return null;
+		}
 		return DEFAULT_DATE_FORMATTER.print(date);
 	}
 
 	public static String getDefaultViewFormattedLocalDateTime(LocalDateTime date) {
+		if (date == null) {
+			return null;
+		}
 		return DEFAULT_DATE_TIME_FORMATTER.print(date);
 	}
 
 	public static LocalDate getLocalDateByDefaultString(String day) {
+		if (Strings.isNullOrEmpty(day)) {
+			return null;
+		}
 		return DEFAULT_DATE_FORMATTER.parseLocalDate(day);
 	}
 
 	public static LocalDate getLocalDateByDashString(String day) {
+		if (Strings.isNullOrEmpty(day)) {
+			return null;
+		}
 		return DASH_DATE_FORMATTER.parseLocalDate(day);
 	}
 
 	public static String getDashStringByLocalDate(LocalDate day) {
+		if (day == null) {
+			return null;
+		}
 		return DASH_DATE_FORMATTER.print(day);
 	}
 
@@ -57,10 +73,16 @@ public final class DateTimeUtil {
 	}
 
 	public static LocalDateTime toLocaDateTimeInUTC(Date date) {
+		if (date == null) {
+			return null;
+		}
 		return new DateTime(date, DEFAULT_DATE_TIME_ZONE).toLocalDateTime();
 	}
 
 	public static String getIsoFormattedLocalDateTime(LocalDateTime date) {
+		if (date == null) {
+			return null;
+		}
 		return DASH_ISO_DATE_TIME_FORMATTER.print(date);
 	}
 
@@ -69,6 +91,9 @@ public final class DateTimeUtil {
 	}
 
 	public static LocalDateTime toLocalDateTimeInUserTimeZone(Date date, int dateTimeZoneIdentifier) {
+		if (date == null) {
+			return null;
+		}
 		return new DateTime(date, DateTimeZone.forOffsetHours(dateTimeZoneIdentifier)).toLocalDateTime();
 	}
 

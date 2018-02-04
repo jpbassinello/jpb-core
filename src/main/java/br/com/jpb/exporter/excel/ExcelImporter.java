@@ -2,8 +2,16 @@ package br.com.jpb.exporter.excel;
 
 import br.com.jpb.exporter.Importer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,6 +42,20 @@ public class ExcelImporter<T> extends Importer<T> {
 	public ExcelImporter<T> withIgnoredFields(Set<String> ignoredFields) {
 		this.ignoredFields.addAll(ignoredFields);
 		return this;
+	}
+
+	public static List<List<String>> readStringMatrix(File file, int rowsInHeader, int sheetNumber) {
+		ExcelImporter<Object> excelImporter = new ExcelImporter<>(Object.class)
+				.withRowsInHeader(rowsInHeader)
+				.withSheetNumber(sheetNumber);
+
+		try {
+			excelImporter.init(new BufferedInputStream(new FileInputStream(file)));
+		} catch (IOException e) {
+			throw new IllegalStateException("Error while get workbook from Input Stream", e);
+		}
+
+		return excelImporter.rows(rowsInHeader);
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 		super(clazz);
 	}
 
-	protected abstract void init();
+	protected abstract void init(String fileName);
 
 	protected abstract void initHeader();
 
@@ -44,7 +44,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
 		validateConfiguration();
 
-		init();
+		init(fileName);
 
 		if (!noHeader) {
 			initHeader();
@@ -75,7 +75,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
 				ExporterDateTime dateTime = column.getAnnotation(ExporterDateTime.class);
 				if (dateTime != null) {
-					writeColumn(dateCellValue(obj, dateTime), dateTime.format(), rowIndex, colIndex);
+					writeColumn(dateCellValue(obj), dateTime.format(), rowIndex, colIndex);
 					continue;
 				}
 
@@ -101,9 +101,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
 		}
 
-		File file = createFile(fileName);
-
-		return file;
+		return createFile(fileName);
 	}
 
 	protected File createFile(String fileName) {
@@ -138,7 +136,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 		return bigDecimal.setScale(numeric.scale(), numeric.roundingMode()).doubleValue();
 	}
 
-	private Date dateCellValue(Object obj, ExporterDateTime dateTime) {
+	private Date dateCellValue(Object obj) {
 		Date date = null;
 		if (obj instanceof LocalDateTime) {
 			date = ((LocalDateTime) obj).toDate();

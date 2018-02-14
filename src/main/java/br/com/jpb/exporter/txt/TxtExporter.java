@@ -46,13 +46,8 @@ public class TxtExporter<T> extends Exporter<T> {
 	}
 
 	@Override
-	protected void init() {
-		lines = new TreeMap<>(new Comparator<Integer>() {
-			@Override
-			public int compare(Integer i1, Integer i2) {
-				return i1.compareTo(i2);
-			}
-		});
+	protected void init(String fileName) {
+		lines = new TreeMap<>(Comparator.naturalOrder());
 		joiner = Joiner.on(separator);
 	}
 
@@ -92,12 +87,7 @@ public class TxtExporter<T> extends Exporter<T> {
 	}
 
 	private List<String> getLine(int rowIndex) {
-		List<String> line = lines.get(rowIndex);
-		if (line == null) {
-			line = new ArrayList<>();
-			lines.put(rowIndex, line);
-		}
-		return line;
+		return lines.computeIfAbsent(rowIndex, k -> new ArrayList<>());
 	}
 
 	@Override

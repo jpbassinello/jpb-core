@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>br.com.jpb</groupId>
 	<artifactId>jpb-core</artifactId>
-	<version>4.1.0</version>
+	<version>4.2.0</version>
 	<name>Core JPB</name>
 	<description>Util classes developed by JPB</description>
 
@@ -16,7 +16,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.1.RELEASE</version>
+		<version>1.5.6.RELEASE</version>
 		<relativePath/>
 	</parent>
 

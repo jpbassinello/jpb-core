@@ -1,8 +1,10 @@
 package br.com.jpb.exporter.excel;
 
 import br.com.jpb.exporter.Exporter;
+import com.google.common.io.Files;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,8 +43,9 @@ public class ExcelExporter<T> extends Exporter<T> {
 	}
 
 	@Override
-	protected void init() {
-		wb = new HSSFWorkbook();
+	protected void init(String fileName) {
+		boolean xlsx = "xlsx".equalsIgnoreCase(Files.getFileExtension(fileName));
+		wb =  xlsx ? new XSSFWorkbook() : new HSSFWorkbook();
 		sheet = wb.createSheet(sheetName);
 
 		defaultCellStyle = defaultCellStyle(wb);
@@ -182,7 +185,7 @@ public class ExcelExporter<T> extends Exporter<T> {
 	}
 
 	public File exportDataMatrixToFile(List<String> headers, List<List<String>> matrix, String fileName) {
-		init();
+		init(fileName);
 
 		initHeader();
 		for (int i = 0; i < headers.size(); i++) {

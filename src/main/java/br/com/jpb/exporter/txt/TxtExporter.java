@@ -8,7 +8,13 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class TxtExporter<T> extends Exporter<T> {
 
@@ -68,7 +74,9 @@ public class TxtExporter<T> extends Exporter<T> {
 
 	@Override
 	protected void writeColumn(Date value, String dateFormat, int rowIndex, int colIndex) {
-		getLine(rowIndex).add(DateTimeFormat.forPattern(dateFormat).print(LocalDateTime.fromDateFields(value)));
+		writeColumn(DateTimeFormat
+				.forPattern(dateFormat)
+				.print(LocalDateTime.fromDateFields(value)), rowIndex, colIndex);
 	}
 
 	@Override
@@ -77,13 +85,22 @@ public class TxtExporter<T> extends Exporter<T> {
 	}
 
 	@Override
+	protected void writeColumn(int value, int rowIndex, int colIndex) {
+		getLine(rowIndex).add(String.valueOf(value));
+	}
+
+	@Override
 	protected void writeColumn(boolean value, int rowIndex, int colIndex) {
-		getLine(rowIndex).add(Boolean.valueOf(value).toString());
+		getLine(rowIndex).add(Boolean
+				.valueOf(value)
+				.toString());
 	}
 
 	@Override
 	protected void writeColumn(String value, int rowIndex, int colIndex) {
-		getLine(rowIndex).add(QUOTES + value.replaceAll("\"", "\\\"").replaceAll("\n", "") + QUOTES);
+		getLine(rowIndex).add(QUOTES + value
+				.replaceAll("\"", "\\\"")
+				.replaceAll("\n", "") + QUOTES);
 	}
 
 	private List<String> getLine(int rowIndex) {
@@ -101,7 +118,9 @@ public class TxtExporter<T> extends Exporter<T> {
 
 	private void writeLine(OutputStream os, List<String> line) {
 		try {
-			os.write(joiner.join(line).getBytes(Charset.defaultCharset()));
+			os.write(joiner
+					.join(line)
+					.getBytes(Charset.defaultCharset()));
 			os.write(lineSeparator.getBytes(Charset.defaultCharset()));
 		} catch (IOException e) {
 			throw new IllegalStateException("Error while writing to the file", e);

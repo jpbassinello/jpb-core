@@ -15,6 +15,8 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public abstract class BaseExporterImporter<T> {
+	protected final String DEFAULT_DATE_TIME_FORMAT = "dd/MM/yyyy HH:mm:ss";
+
 	private final Class<T> clazz;
 
 	private final Set<Class<?>> RETURN_TYPES_FOR_NUMERIC = new HashSet<Class<?>>(

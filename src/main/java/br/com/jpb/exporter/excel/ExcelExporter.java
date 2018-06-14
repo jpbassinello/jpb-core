@@ -94,6 +94,11 @@ public class ExcelExporter<T> extends Exporter<T> {
 	}
 
 	@Override
+	protected void writeColumn(int value, int rowIndex, int colIndex) {
+		writeColumn(Integer.valueOf(value).doubleValue(), rowIndex, colIndex);
+	}
+
+	@Override
 	protected void writeColumn(boolean value, int rowIndex, int colIndex) {
 		Cell cell = defaultCell(rowIndex, colIndex);
 		cell.setCellValue(value);
@@ -182,25 +187,5 @@ public class ExcelExporter<T> extends Exporter<T> {
 		style.setBorderRight(CellStyle.BORDER_THIN);
 		style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 		return style;
-	}
-
-	public File exportDataMatrixToFile(List<String> headers, List<List<String>> matrix, String fileName) {
-		init(fileName);
-
-		initHeader();
-		for (int i = 0; i < headers.size(); i++) {
-			writeHeaderColumn(headers.get(i), i);
-		}
-
-		for (int i = 0; i < matrix.size(); i++) {
-			List<String> row = matrix.get(i);
-			for (int j = 0; j < row.size(); j++) {
-				String obj = row.get(j);
-				obj = obj == null ? "" : obj;
-				writeColumn(obj, i + 1, j);
-			}
-		}
-
-		return createFile(fileName);
 	}
 }

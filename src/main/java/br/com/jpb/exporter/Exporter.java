@@ -4,7 +4,12 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.YearMonth;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -32,6 +37,8 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
 	protected abstract void writeColumn(double value, int rowIndex, int colIndex);
 
+	protected abstract void writeColumn(int value, int rowIndex, int colIndex);
+
 	protected abstract void writeColumn(boolean value, int rowIndex, int colIndex);
 
 	protected abstract void writeColumn(String value, int rowIndex, int colIndex);
@@ -57,7 +64,11 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 		for (int i = 0; i < data.size(); i++) {
 			int rowIndex = i + 1;
 			Map<Integer, Field> fieldsByIndex = getColumnsFieldsAnnotatedWithColumnGroupByIndex();
-			int maxIndex = fieldsByIndex.keySet().stream().max(Comparator.naturalOrder()).orElse(0);
+			int maxIndex = fieldsByIndex
+					.keySet()
+					.stream()
+					.max(Comparator.naturalOrder())
+					.orElse(0);
 			int colIndex = -1;
 			for (int j = 0; j <= maxIndex; j++) {
 				Field column = fieldsByIndex.get(j);
@@ -133,7 +144,9 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 	}
 
 	private double defaultScaleAndRounding(BigDecimal bigDecimal, ExporterNumeric numeric) {
-		return bigDecimal.setScale(numeric.scale(), numeric.roundingMode()).doubleValue();
+		return bigDecimal
+				.setScale(numeric.scale(), numeric.roundingMode())
+				.doubleValue();
 	}
 
 	private Date dateCellValue(Object obj) {
@@ -145,7 +158,9 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 			date = ((LocalDate) obj).toDate();
 		}
 		if (obj instanceof YearMonth) {
-			date = ((YearMonth) obj).toLocalDate(1).toDate();
+			date = ((YearMonth) obj)
+					.toLocalDate(1)
+					.toDate();
 		}
 		return date;
 	}
@@ -159,4 +174,43 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 		}
 	}
 
+	public File exportDataMatrixToFile(List<String> headers, List<List<Object>> matrix,
+			String fileName) {
+		init(fileName);
+
+		initHeader();
+		for (int i = 0; i < headers.size(); i++) {
+			writeHeaderColumn(headers.get(i), i);
+		}
+
+		for (int i = 0; i < matrix.size(); i++) {
+			List<?> row = matrix.get(i);
+			for (int j = 0; j < row.size(); j++) {
+				Object obj = row.get(j);
+				obj = obj == null ? "" : obj;
+
+				int rowIndex = i + 1;
+
+				if (obj instanceof Date) {
+					writeColumn((Date) obj, DEFAULT_DATE_TIME_FORMAT, rowIndex, j);
+				} else {
+					if (obj instanceof Number) {
+						if (obj instanceof Integer) {
+							writeColumn((Integer) obj, rowIndex, j);
+						} else {
+							writeColumn(((Number) obj).doubleValue(), rowIndex, j);
+						}
+					} else {
+						if (obj instanceof Boolean) {
+							writeColumn((Boolean) obj, rowIndex, j);
+						} else {
+							writeColumn(obj.toString(), rowIndex, j);
+						}
+					}
+				}
+			}
+		}
+
+		return createFile(fileName);
+	}
 }

@@ -3,7 +3,10 @@ package br.com.jpb.exporter.txt;
 import au.com.bytecode.opencsv.CSVReader;
 import br.com.jpb.exporter.Importer;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,6 +43,20 @@ public class TxtImporter<T> extends Importer<T> {
 		return this;
 	}
 
+	public static List<List<String>> readStringMatrix(File file, int rowsInHeader, char separator) {
+		TxtImporter<Object> txtImporter = new TxtImporter<>(Object.class)
+				.withRowsInHeader(rowsInHeader)
+				.withSeparator(separator);
+
+		try {
+			txtImporter.init(new BufferedInputStream(new FileInputStream(file)));
+		} catch (IOException e) {
+			throw new IllegalStateException("Error while init from Input Stream", e);
+		}
+
+		return txtImporter.rows(rowsInHeader);
+	}
+
 	@Override
 	protected void init(InputStream is) {
 		this.is = is;
@@ -61,7 +78,10 @@ public class TxtImporter<T> extends Importer<T> {
 			throw new IllegalStateException("Error while reading TXT", e);
 		}
 
-		return lines.stream().map(colsArray -> Arrays.asList(colsArray)).collect(Collectors.toList());
+		return lines
+				.stream()
+				.map(colsArray -> Arrays.asList(colsArray))
+				.collect(Collectors.toList());
 	}
 
 }

@@ -1,13 +1,13 @@
 package br.com.jpb.exporter.txt;
 
 import br.com.jpb.exporter.Exporter;
+import br.com.jpb.util.DateTimeUtil;
 import com.google.common.base.Joiner;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -74,9 +74,9 @@ public class TxtExporter<T> extends Exporter<T> {
 
 	@Override
 	protected void writeColumn(Date value, String dateFormat, int rowIndex, int colIndex) {
-		writeColumn(DateTimeFormat
-				.forPattern(dateFormat)
-				.print(LocalDateTime.fromDateFields(value)), rowIndex, colIndex);
+		writeColumn(DateTimeFormatter
+				.ofPattern(dateFormat)
+				.format(DateTimeUtil.from(value)), rowIndex, colIndex);
 	}
 
 	@Override

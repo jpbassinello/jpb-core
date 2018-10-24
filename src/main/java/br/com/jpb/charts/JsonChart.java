@@ -11,7 +11,10 @@ public abstract class JsonChart {
 	public abstract String getDataFormat();
 
 	protected String[] singleQuote(String... s) {
-		return Stream.of(s).map(str -> singleQuote(str)).toArray(String[]::new);
+		return Stream
+				.of(s)
+				.map(this::singleQuote)
+				.toArray(String[]::new);
 	}
 
 	protected String singleQuote(String s) {

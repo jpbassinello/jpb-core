@@ -9,30 +9,42 @@ import br.com.jpb.exporter.ExporterDateTime;
 import br.com.jpb.exporter.ExporterNumeric;
 import br.com.jpb.exporter.txt.TxtExporter;
 import br.com.jpb.exporter.txt.TxtImporter;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class TxtTest {
 
-	private static final LocalDateTime DATE_TIME_1 = LocalDateTime.now().withTime(10, 0, 0, 0);
-	private static final LocalDateTime DATE_TIME_2 = LocalDateTime.now().withTime(18, 23, 54, 0);
+	private static final LocalDateTime DATE_TIME_1 = LocalDate
+			.now()
+			.atTime(LocalTime.of(10, 0, 0, 0));
+	private static final LocalDateTime DATE_TIME_2 = LocalDate
+			.now()
+			.atTime(LocalTime.of(18, 23, 54, 0));
 
 	@Test
 	public void testExportImport() {
 
 		List<TestPojo> expected = new ArrayList<>();
 		expected.add(new TestPojo(1, "Coluna 1", true, LocalDate.now(), DATE_TIME_1, new BigDecimal("0.333")));
-		expected.add(new TestPojo(2, "Coluna 2", false, LocalDate.now().withDayOfMonth(10), DATE_TIME_2,
+		expected.add(new TestPojo(2, "Coluna 2", false, LocalDate
+				.now()
+				.withDayOfMonth(10), DATE_TIME_2,
 				new BigDecimal("23.996")));
 
 		testHappyFlow(expected);
@@ -50,24 +62,28 @@ public class TxtTest {
 
 	private void testWithIgnoredFields(List<TestPojo> expected) {
 		final Set<String> ignoredFields = new HashSet<>(Arrays.asList("c1", "c3", "c4", "c6"));
-		File fileWithIgnoredFields = new TxtExporter<>(TestPojo.class).withIgnoredFields(ignoredFields)
+		File fileWithIgnoredFields = new TxtExporter<>(TestPojo.class)
+				.withIgnoredFields(ignoredFields)
 				.exportFile(expected, "testWithIgnoredFields.csv");
 
 		List<TestPojo> expectedWithIgnoredFields = new ArrayList<>();
 		expectedWithIgnoredFields.add(new TestPojo(0, "Coluna 1", false, null, DATE_TIME_1, null));
 		expectedWithIgnoredFields.add(new TestPojo(0, "Coluna 2", false, null, DATE_TIME_2, null));
 
-		List<TestPojo> processedWithIgnoredFields = new TxtImporter<>(TestPojo.class).withIgnoredFields(ignoredFields)
+		List<TestPojo> processedWithIgnoredFields = new TxtImporter<>(TestPojo.class)
+				.withIgnoredFields(ignoredFields)
 				.importFile(fileWithIgnoredFields);
 
 		Assert.assertEquals(expectedWithIgnoredFields, processedWithIgnoredFields);
 	}
 
 	private void testPipeSeparator(List<TestPojo> expected) {
-		File filePipeSeparator = new TxtExporter<>(TestPojo.class).withSeparator('|')
+		File filePipeSeparator = new TxtExporter<>(TestPojo.class)
+				.withSeparator('|')
 				.exportFile(expected, "testPipeSeparator.csv");
 
-		List<TestPojo> processedPipeSeparator = new TxtImporter<>(TestPojo.class).withSeparator('|')
+		List<TestPojo> processedPipeSeparator = new TxtImporter<>(TestPojo.class)
+				.withSeparator('|')
 				.importFile(filePipeSeparator);
 
 		Assert.assertEquals(expected, processedPipeSeparator);
@@ -83,7 +99,7 @@ public class TxtTest {
 		@ExporterColumn(headerText = "Coluna 3", index = 2)
 		private boolean c3;
 		@ExporterColumn(headerText = "Coluna 4", index = 3)
-		@ExporterDateTime(format = "MM/dd/yyyy")
+		@ExporterDateTime(formatDate = "MM/dd/yyyy")
 		private LocalDate c4;
 		@ExporterColumn(headerText = "Coluna 5", index = 4)
 		@ExporterDateTime

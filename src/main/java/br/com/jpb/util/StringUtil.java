@@ -7,12 +7,9 @@ package br.com.jpb.util;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.validator.routines.UrlValidator;
-import org.joda.time.Days;
-import org.joda.time.Hours;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Minutes;
+import lombok.experimental.UtilityClass;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.validator.internal.constraintvalidators.hv.URLValidator;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -22,20 +19,25 @@ import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
-public final class StringUtil {
+@UtilityClass
+public class StringUtil {
 
 	public static final String SPACE = " ";
-	public static final Joiner DEFAULT_JOINER = Joiner.on(", ").skipNulls();
-	public static final Splitter DEFAULT_SPLITER = Splitter.on(", ").omitEmptyStrings().trimResults();
-	private StringUtil() {
-	}
+	public static final Joiner DEFAULT_JOINER = Joiner
+			.on(", ")
+			.skipNulls();
+	public static final Splitter DEFAULT_SPLITER = Splitter
+			.on(", ")
+			.omitEmptyStrings()
+			.trimResults();
 
 	public static String removeAccents(String original) {
 		if (original == null) {
@@ -46,17 +48,21 @@ public final class StringUtil {
 		return original;
 	}
 
-	public static String getTimeAgo(Date date, int userTimeZone) {
-		if (date == null) {
+	public static String getTimeAgo(LocalDateTime dateTime) {
+		if (dateTime == null) {
 			return null;
 		}
-		LocalDateTime start = DateTimeUtil.toLocalDateTimeInUserTimeZone(date, userTimeZone);
-		LocalDateTime end = DateTimeUtil.nowLocalDateTimeInUserTimeZone(userTimeZone);
-		return StringUtil.getTimeAgo(Days.daysBetween(start, end).getDays(), Hours.hoursBetween(start, end).getHours(),
-				Minutes.minutesBetween(start, end).getMinutes());
+		LocalDateTime now = LocalDateTime.now();
+
+
+		long days = ChronoUnit.DAYS.between(dateTime, now);
+		long hours = ChronoUnit.HOURS.between(dateTime, now);
+		long minutes = ChronoUnit.MINUTES.between(dateTime, now);
+
+		return StringUtil.getTimeAgo(days, hours, minutes);
 	}
 
-	private static String getTimeAgo(int daysAgo, int hoursAgo, int minutesAgo) {
+	private static String getTimeAgo(long daysAgo, long hoursAgo, long minutesAgo) {
 		if (daysAgo == 0 && hoursAgo == 0 && minutesAgo == 0) {
 			return MessageUtil.getString("justNow");
 		}
@@ -100,7 +106,9 @@ public final class StringUtil {
 		if (lastIndex < 0) {
 			return string;
 		}
-		String tail = string.substring(lastIndex).replaceFirst(from, to);
+		String tail = string
+				.substring(lastIndex)
+				.replaceFirst(from, to);
 		return string.substring(0, lastIndex) + tail;
 	}
 
@@ -132,14 +140,18 @@ public final class StringUtil {
 		if (Strings.isNullOrEmpty(s)) {
 			return null;
 		}
-		return s.replaceAll("\\s+", " ").trim();
+		return s
+				.replaceAll("\\s+", " ")
+				.trim();
 	}
 
 	public static String trimAndRemoveSpaces(String s) {
 		if (Strings.isNullOrEmpty(s)) {
 			return null;
 		}
-		return s.replaceAll("\\s*", "").trim();
+		return s
+				.replaceAll("\\s*", "")
+				.trim();
 	}
 
 	public static String limitToBytesAtLastSpace(String s, int numBytes) {
@@ -159,7 +171,9 @@ public final class StringUtil {
 			}
 		} else {
 			for (char c : trim.toCharArray()) {
-				if (r.getBytes().length + Character.toString(c).getBytes().length > numBytes) {
+				if (r.getBytes().length + Character
+						.toString(c)
+						.getBytes().length > numBytes) {
 					break;
 				}
 				r += c;
@@ -186,7 +200,9 @@ public final class StringUtil {
 			}
 			sb.append(Integer.toHexString(up | down));
 		}
-		return sb.toString().substring(0, size);
+		return sb
+				.toString()
+				.substring(0, size);
 	}
 
 	public static String escapeHTML(String string) {
@@ -459,12 +475,15 @@ public final class StringUtil {
 	}
 
 	public static String removePunctuation(String s) {
-		return s.replaceAll("\\p{Punct}", "").replaceAll("<", "").replaceAll(">", "");
+		return s
+				.replaceAll("\\p{Punct}", "")
+				.replaceAll("<", "")
+				.replaceAll(">", "");
 	}
 
 	public static boolean isUrlValid(String s) {
 		// DEFAULT schemes = "http", "https", "ftp"
-		return new UrlValidator().isValid(s.toLowerCase());
+		return new URLValidator().isValid(s.toLowerCase(), null);
 	}
 
 	public static String encode(String name, int size) {
@@ -485,11 +504,16 @@ public final class StringUtil {
 			}
 			s.append(Integer.toHexString(up | down));
 		}
-		return s.toString().substring(0, size);
+		return s
+				.toString()
+				.substring(0, size);
 	}
 
 	public static String removeQuotesAndTrim(String s) {
-		return Strings.isNullOrEmpty(s) ? null : s.replaceAll("\'", "").replaceAll("\"", "").trim();
+		return Strings.isNullOrEmpty(s) ? null : s
+				.replaceAll("\'", "")
+				.replaceAll("\"", "")
+				.trim();
 	}
 
 	public static String trimNullSafe(String s) {
@@ -502,12 +526,14 @@ public final class StringUtil {
 
 	public static String formatAndSimplifyNumber(long n) {
 		if (n > 1000000) {
-			BigDecimal bigDecimal = BigDecimal.valueOf(n)
+			BigDecimal bigDecimal = BigDecimal
+					.valueOf(n)
 					.divide(BigDecimal.valueOf(1000000), 1, RoundingMode.HALF_EVEN);
 			return bigDecimal.toString() + "M";
 		} else {
 			if (n > 1000) {
-				BigDecimal bigDecimal = BigDecimal.valueOf(n)
+				BigDecimal bigDecimal = BigDecimal
+						.valueOf(n)
 						.divide(BigDecimal.valueOf(1000), 1, RoundingMode.HALF_EVEN);
 				return bigDecimal.toString() + "K";
 			} else {
@@ -518,7 +544,8 @@ public final class StringUtil {
 
 	public static String formatCurrency(BigDecimal value) {
 		return value == null || BigDecimal.ZERO.equals(value.setScale(0, RoundingMode.HALF_UP)) ? MessageUtil
-				.getString("free") : MessageUtil.getString("currency") + " " + value.setScale(2, RoundingMode.HALF_UP)
+				.getString("free") : MessageUtil.getString("currency") + " " + value
+				.setScale(2, RoundingMode.HALF_UP)
 				.toString();
 	}
 

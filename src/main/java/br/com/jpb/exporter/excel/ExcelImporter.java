@@ -3,6 +3,7 @@ package br.com.jpb.exporter.excel;
 import br.com.jpb.exporter.Importer;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -81,29 +82,41 @@ public class ExcelImporter<T> extends Importer<T> {
 			List<String> columns = new ArrayList<>();
 			for (int colIndex = 0; colIndex < row.getLastCellNum(); colIndex++) {
 				Cell cell = row.getCell(colIndex);
-				if (cell == null || cell.getCellType() == Cell.CELL_TYPE_BLANK) {
+				if (cell == null || cell.getCellTypeEnum() == CellType.BLANK) {
 					columns.add(null);
 					continue;
 				}
 				try {
-					switch (cell.getCellType()) {
-						case Cell.CELL_TYPE_STRING:
+					switch (cell.getCellTypeEnum()) {
+						case STRING:
 							columns.add(cell.getStringCellValue());
 							break;
-						case Cell.CELL_TYPE_NUMERIC:
+						case NUMERIC:
 							if (DateUtil.isCellDateFormatted(cell)) {
-								columns.add(Long.valueOf(cell.getDateCellValue().getTime()).toString());
+								columns.add(Long
+										.valueOf(cell
+												.getDateCellValue()
+												.getTime())
+										.toString());
 							} else {
 								double d = cell.getNumericCellValue();
 								if (d % 1 == 0) {
-									columns.add(Long.valueOf(Double.valueOf(d).longValue()).toString());
+									columns.add(Long
+											.valueOf(Double
+													.valueOf(d)
+													.longValue())
+											.toString());
 								} else {
-									columns.add(Double.valueOf(d).toString());
+									columns.add(Double
+											.valueOf(d)
+											.toString());
 								}
 							}
 							break;
-						case Cell.CELL_TYPE_BOOLEAN:
-							columns.add(Boolean.valueOf(cell.getBooleanCellValue()).toString());
+						case BOOLEAN:
+							columns.add(Boolean
+									.valueOf(cell.getBooleanCellValue())
+									.toString());
 							break;
 						default:
 							break;

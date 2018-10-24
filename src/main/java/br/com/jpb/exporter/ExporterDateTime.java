@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 public @interface ExporterDateTime {
 
-	String format() default "dd/MM/yyyy HH:mm:ss";
+	String formatDateTime() default "dd/MM/yyyy HH:mm:ss";
+	String formatDate() default "dd/MM/yyyy";
+	String formatMonth() default "MM/yyyy";
 
 }

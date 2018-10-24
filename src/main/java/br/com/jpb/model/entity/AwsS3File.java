@@ -1,19 +1,29 @@
 package br.com.jpb.model.entity;
 
-import br.com.jpb.model.BaseEntity;
-import br.com.jpb.util.DateTimeUtil;
 import br.com.jpb.util.StringUtil;
 import com.google.common.io.Files;
-import lombok.*;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.NotEmpty;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.File;
-import java.util.Date;
+import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "aws_s3_file")
@@ -21,9 +31,7 @@ import java.util.Date;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode(of = "hash")
 @ToString
-@Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class AwsS3File implements BaseEntity {
+public class AwsS3File implements Serializable {
 
 	private static final int MD5_HASH_SIZE = 8;
 
@@ -60,20 +68,19 @@ public class AwsS3File implements BaseEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_date_time")
 	@NotNull
-	private Date createDateTime;
+	private LocalDateTime createDateTime;
 
 	@Transient
 	@Setter
 	private File original;
 
 	public AwsS3File(String folder, String fileName, String userCreate) {
-		Date now = DateTimeUtil.nowWithDateTimeInUTC().toDate();
 		this.folder = folder;
 		this.name = Files.getNameWithoutExtension(fileName);
 		this.extension = Files.getFileExtension(fileName);
 		this.hash = StringUtil.encode(String.valueOf(System.currentTimeMillis()), MD5_HASH_SIZE);
 		this.userCreate = userCreate;
-		this.createDateTime = now;
+		this.createDateTime = LocalDateTime.now();
 	}
 
 	public String getOriginalFileName() {

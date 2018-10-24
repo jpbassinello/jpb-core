@@ -8,12 +8,12 @@ import br.com.jpb.exporter.ExporterColumn;
 import br.com.jpb.exporter.ExporterDateTime;
 import br.com.jpb.exporter.ExporterNumeric;
 import br.com.jpb.exporter.excel.ExcelImporter;
-import org.apache.commons.io.FileUtils;
-import org.joda.time.LocalDate;
+import br.com.jpb.util.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -27,11 +27,12 @@ public class ExcelImportTest {
 	public void testImport() {
 
 		List<TestPojo> expected = new ArrayList<>();
-		expected.add(new TestPojo(null, "abc", 123, new LocalDate(1985, 4, 10)));
-		expected.add(new TestPojo(1, "def", null, new LocalDate(1988, 5, 24)));
+		expected.add(new TestPojo(null, "abc", 123, LocalDate.of(1985, 4, 10)));
+		expected.add(new TestPojo(1, "def", null, LocalDate.of(1988, 5, 24)));
 		expected.add(new TestPojo(2, "ghi", 456, null));
 
-		File file = FileUtils.toFile(getClass().getResource("/excel/excel-test-1.xlsx"));
+		File file = IOUtil
+				.readFileFrom(getClass().getResource("/excel/excel-test-1.xlsx"));
 
 		List<TestPojo> processed = new ExcelImporter<>(TestPojo.class).importFile(file);
 
@@ -50,10 +51,10 @@ public class ExcelImportTest {
 		@ExporterNumeric
 		private Integer c3;
 		@ExporterColumn(headerText = "Coluna 4", index = 4)
-		@ExporterDateTime(format = "MM/dd/yyyy")
+		@ExporterDateTime(formatDate = "MM/dd/yyyy")
 		private LocalDate c4;
 		@ExporterColumn(headerText = "Coluna 5", index = 5)
-		@ExporterDateTime(format = "MM/dd/yyyy")
+		@ExporterDateTime(formatDate = "MM/dd/yyyy")
 		private LocalDate c5;
 
 		public TestPojo() {

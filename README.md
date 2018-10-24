@@ -1,2 +1,2 @@
 # jpb-core
-Core methods for jpb projects
+Core and Util methods for my projects

@@ -9,30 +9,42 @@ import br.com.jpb.exporter.ExporterDateTime;
 import br.com.jpb.exporter.ExporterNumeric;
 import br.com.jpb.exporter.excel.ExcelExporter;
 import br.com.jpb.exporter.excel.ExcelImporter;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class ExcelImportAndExportTest {
 
-	private static final LocalDateTime DATE_TIME_1 = LocalDateTime.now().withTime(10, 0, 0, 0);
-	private static final LocalDateTime DATE_TIME_2 = LocalDateTime.now().withTime(18, 23, 54, 0);
+	private static final LocalDateTime DATE_TIME_1 = LocalDate
+			.now()
+			.atTime(LocalTime.of(10, 0));
+	private static final LocalDateTime DATE_TIME_2 = LocalDate
+			.now()
+			.atTime(LocalTime.of(18, 23, 54, 0));
 
 	@Test
 	public void testImportAndExport() {
 
 		List<TestPojo> expected = new ArrayList<>();
 		expected.add(new TestPojo(1, "Coluna 1", true, LocalDate.now(), DATE_TIME_1, new BigDecimal("0.333")));
-		expected.add(new TestPojo(2, "Coluna 2", false, LocalDate.now().withDayOfMonth(10), DATE_TIME_2,
+		expected.add(new TestPojo(2, "Coluna 2", false, LocalDate
+				.now()
+				.withDayOfMonth(10), DATE_TIME_2,
 				new BigDecimal("23.996")));
 
 		testHappyFlow(expected);
@@ -46,10 +58,12 @@ public class ExcelImportAndExportTest {
 		List<TestPojo> processedWithIgnoredFields;
 
 		final Set<String> ignoredFiedls = new HashSet<>(Arrays.asList("c1", "c3", "c4", "c6"));
-		File fileWithIgnoredFields = new ExcelExporter<>(TestPojo.class).withIgnoredFields(ignoredFiedls)
+		File fileWithIgnoredFields = new ExcelExporter<>(TestPojo.class)
+				.withIgnoredFields(ignoredFiedls)
 				.exportFile(expected, "testWithIgnoredFields.xls");
 
-		processedWithIgnoredFields = new ExcelImporter<>(TestPojo.class).withIgnoredFields(ignoredFiedls)
+		processedWithIgnoredFields = new ExcelImporter<>(TestPojo.class)
+				.withIgnoredFields(ignoredFiedls)
 				.importFile(fileWithIgnoredFields);
 
 		Assert.assertEquals(expectedWithIgnoredFields, processedWithIgnoredFields);
@@ -73,7 +87,7 @@ public class ExcelImportAndExportTest {
 		@ExporterColumn(headerText = "Coluna 3", index = 2)
 		private boolean c3;
 		@ExporterColumn(headerText = "Coluna 4", index = 3)
-		@ExporterDateTime(format = "MM/dd/yyyy")
+		@ExporterDateTime(formatDate = "MM/dd/yyyy")
 		private LocalDate c4;
 		@ExporterColumn(headerText = "Coluna 5", index = 4)
 		@ExporterDateTime

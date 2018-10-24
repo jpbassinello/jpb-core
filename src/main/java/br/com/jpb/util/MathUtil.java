@@ -1,16 +1,16 @@
 package br.com.jpb.util;
 
 import com.google.common.base.MoreObjects;
+import lombok.experimental.UtilityClass;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-public final class MathUtil {
+@UtilityClass
+public class MathUtil {
 
 	private static final int DEFAULT_SCALE = 6;
 	private static final RoundingMode DEFAULT_ROUNDING = RoundingMode.HALF_UP;
-	private MathUtil() {
-	}
 
 	public static BigDecimal divide(int x, int y) {
 		return divide(BigDecimal.valueOf(x), BigDecimal.valueOf(y));
@@ -31,7 +31,9 @@ public final class MathUtil {
 	}
 
 	public static int asInt(BigDecimal x) {
-		return x == null ? 0 : x.setScale(0, DEFAULT_ROUNDING).intValue();
+		return x == null ? 0 : x
+				.setScale(0, DEFAULT_ROUNDING)
+				.intValue();
 	}
 
 	public static int sumToOldValueNullSafe(Integer oldValue, int sum) {

@@ -1,7 +1,10 @@
 package br.com.jpb.exporter.txt;
 
-import au.com.bytecode.opencsv.CSVReader;
 import br.com.jpb.exporter.Importer;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -65,8 +68,17 @@ public class TxtImporter<T> extends Importer<T> {
 	@Override
 	protected List<List<String>> rows(int rowsInHeader) {
 
-		CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(is, Charset.defaultCharset())),
-				separator, QUOTES, rowsInHeader);
+		CSVParser parser = new CSVParserBuilder()
+				.withSeparator(separator)
+				.withQuoteChar(QUOTES)
+				.build();
+
+
+		CSVReader reader = new CSVReaderBuilder(new BufferedReader(new InputStreamReader(is, Charset.defaultCharset())))
+				.withCSVParser(parser)
+				.withSkipLines(rowsInHeader)
+				.build();
+
 		List<String[]> lines = new ArrayList<>();
 		String[] nextLine;
 		try {
@@ -80,7 +92,7 @@ public class TxtImporter<T> extends Importer<T> {
 
 		return lines
 				.stream()
-				.map(colsArray -> Arrays.asList(colsArray))
+				.map(Arrays::asList)
 				.collect(Collectors.toList());
 	}
 

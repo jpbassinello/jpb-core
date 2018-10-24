@@ -11,7 +11,8 @@ import br.com.jpb.util.MessageUtil;
  */
 public enum YesOrNo implements ValueLabelEnum {
 
-	YES("yes"), NO("no");
+	YES("yes"),
+	NO("no");
 
 	private final String label;
 

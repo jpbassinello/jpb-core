@@ -11,7 +11,8 @@ import br.com.jpb.util.MessageUtil;
  */
 public enum TrueOrFalse implements ValueLabelEnum {
 
-	TRUE("true"), FALSE("false");
+	TRUE("true"),
+	FALSE("false");
 
 	private final String label;
 

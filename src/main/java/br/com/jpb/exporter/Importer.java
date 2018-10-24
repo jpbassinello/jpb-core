@@ -1,14 +1,18 @@
 package br.com.jpb.exporter;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.YearMonth;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,14 +79,20 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 				if (numeric != null) {
 					double value = Double.parseDouble((String) obj);
 					if (Integer.class.equals(type) || int.class.equals(type)) {
-						columnSet(t, column, Double.valueOf(value).intValue());
+						columnSet(t, column, Double
+								.valueOf(value)
+								.intValue());
 					}
 					if (Long.class.equals(type) || long.class.equals(type)) {
-						columnSet(t, column, Double.valueOf(value).longValue());
+						columnSet(t, column, Double
+								.valueOf(value)
+								.longValue());
 					}
 					if (BigDecimal.class.equals(type)) {
 						columnSet(t, column,
-								BigDecimal.valueOf(value).setScale(numeric.scale(), numeric.roundingMode()));
+								BigDecimal
+										.valueOf(value)
+										.setScale(numeric.scale(), numeric.roundingMode()));
 					}
 					continue;
 				}
@@ -107,26 +117,27 @@ public abstract class Importer<T> extends BaseExporterImporter<T> {
 	private void dateTimeAsLdtLong(T t, Field column, Class<?> type, String obj) {
 		long value = Long.valueOf(obj);
 		if (LocalDateTime.class.equals(type)) {
-			LocalDateTime ldt = new LocalDateTime(value);
+			LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(value), ZoneId.systemDefault());
 			columnSet(t, column, ldt);
 		}
 		if (LocalDate.class.equals(type)) {
-			LocalDate ld = new LocalDate(value);
+			LocalDate ld = LocalDateTime
+					.ofInstant(Instant.ofEpochMilli(value), ZoneId.systemDefault())
+					.toLocalDate();
 			columnSet(t, column, ld);
 		}
 	}
 
 	private void dateTimeAsString(T t, Field column, Class<?> type, String obj, ExporterDateTime dateTime) {
 		String date = (String) obj;
-		DateTimeFormatter formatter = DateTimeFormat.forPattern(dateTime.format());
 		if (LocalDateTime.class.equals(type)) {
-			columnSet(t, column, formatter.parseLocalDateTime(date));
+			columnSet(t, column, LocalDateTime.parse(date, DateTimeFormatter.ofPattern(dateTime.formatDateTime())));
 		}
 		if (LocalDate.class.equals(type)) {
-			columnSet(t, column, formatter.parseLocalDate(date));
+			columnSet(t, column, LocalDate.parse(date, DateTimeFormatter.ofPattern(dateTime.formatDate())));
 		}
 		if (YearMonth.class.equals(type)) {
-			columnSet(t, column, YearMonth.parse(date, formatter));
+			columnSet(t, column, YearMonth.parse(date, DateTimeFormatter.ofPattern(dateTime.formatMonth())));
 		}
 	}
 

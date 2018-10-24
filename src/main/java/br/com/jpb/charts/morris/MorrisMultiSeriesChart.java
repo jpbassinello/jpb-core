@@ -16,7 +16,10 @@ public abstract class MorrisMultiSeriesChart extends MorrisChart {
 			final List<String> colors) {
 		return new MorrisMultiSeriesChart() {
 
-			final String[] keys = {"x", "y"};
+			final String[] keys = {
+					"x",
+					"y"
+			};
 
 			@Override
 			public String getData() {
@@ -24,7 +27,10 @@ public abstract class MorrisMultiSeriesChart extends MorrisChart {
 				sb.append("[");
 				final List<String> dataByMonitor = new ArrayList<>();
 				for (TwoAxisValue twoAxisValue : twoAxisValues) {
-					String[] values = {twoAxisValue.getX(), twoAxisValue.getY()};
+					String[] values = {
+							twoAxisValue.getX(),
+							twoAxisValue.getY()
+					};
 					dataByMonitor.add(data(keys, values));
 				}
 				sb.append(JOINER.join(dataByMonitor));

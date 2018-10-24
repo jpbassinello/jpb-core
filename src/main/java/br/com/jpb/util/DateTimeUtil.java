@@ -4,185 +4,174 @@
  */
 package br.com.jpb.util;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Range;
-import org.assertj.core.util.Strings;
-import org.joda.time.*;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import lombok.experimental.UtilityClass;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.Date;
 import java.util.TimeZone;
 
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
-public final class DateTimeUtil {
+@UtilityClass
+public class DateTimeUtil {
 
-	public static final DateTimeFormatter DASH_DATE_FORMATTER = DateTimeFormat
-			.forPattern(MessageUtil.getString("dash.view.dateFormat"));
-	public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormat
-			.forPattern(MessageUtil.getString("default.view.dateFormat"));
-	public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormat
-			.forPattern(MessageUtil.getString("default.view.dateTimeFormat"));
+	public static final DateTimeFormatter DASH_DATE_FORMATTER = DateTimeFormatter
+			.ofPattern(MessageUtil.getString("dash.view.dateFormat"));
+	public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter
+			.ofPattern(MessageUtil.getString("default.view.dateFormat"));
+	public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter
+			.ofPattern(MessageUtil.getString("default.view.dateTimeFormat"));
 
-	public static final DateTimeFormatter DASH_ISO_DATE_FORMATTER = DateTimeFormat.forPattern("yyyy-MM-dd");
-	public static final DateTimeFormatter DASH_ISO_DATE_TIME_FORMATTER = DateTimeFormat
-			.forPattern("yyyy-MM-dd HH:mm:ss");
-	public static final DateTimeZone DEFAULT_DATE_TIME_ZONE = DateTimeZone.UTC;
-
-	private DateTimeUtil() {
-	}
+	public static final DateTimeFormatter DASH_ISO_DATE_FORMATTER = DateTimeFormatter
+			.ofPattern("yyyy-MM-dd");
+	public static final DateTimeFormatter DASH_ISO_DATE_TIME_FORMATTER = DateTimeFormatter
+			.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	public static String getDefaultViewFormattedLocalDate(LocalDate date) {
 		if (date == null) {
 			return null;
 		}
-		return DEFAULT_DATE_FORMATTER.print(date);
+		return DEFAULT_DATE_FORMATTER.format(date);
 	}
 
 	public static String getDefaultViewFormattedLocalDateTime(LocalDateTime date) {
 		if (date == null) {
 			return null;
 		}
-		return DEFAULT_DATE_TIME_FORMATTER.print(date);
+		return DEFAULT_DATE_TIME_FORMATTER.format(date);
 	}
 
 	public static LocalDate getLocalDateByDefaultString(String day) {
 		if (Strings.isNullOrEmpty(day)) {
 			return null;
 		}
-		return DEFAULT_DATE_FORMATTER.parseLocalDate(day);
+		return LocalDate.parse(day, DEFAULT_DATE_FORMATTER);
 	}
 
 	public static LocalDate getLocalDateByDashString(String day) {
 		if (Strings.isNullOrEmpty(day)) {
 			return null;
 		}
-		return DASH_DATE_FORMATTER.parseLocalDate(day);
+		return LocalDate.parse(day, DASH_DATE_FORMATTER);
 	}
 
 	public static String getDashStringByLocalDate(LocalDate day) {
 		if (day == null) {
 			return null;
 		}
-		return DASH_DATE_FORMATTER.print(day);
-	}
-
-	public static String nowDefaultViewFormattedLocalDateTime() {
-		return getDefaultViewFormattedLocalDateTime(nowWithDateTimeInUTC());
-	}
-
-	public static LocalDateTime toLocaDateTimeInUTC(Date date) {
-		if (date == null) {
-			return null;
-		}
-		return new DateTime(date, DEFAULT_DATE_TIME_ZONE).toLocalDateTime();
+		return DASH_DATE_FORMATTER.format(day);
 	}
 
 	public static String getIsoFormattedLocalDateTime(LocalDateTime date) {
 		if (date == null) {
 			return null;
 		}
-		return DASH_ISO_DATE_TIME_FORMATTER.print(date);
-	}
-
-	public static LocalDateTime nowLocalDateTimeInUserTimeZone(int dateTimeZoneIdentifier) {
-		return new DateTime(DateTimeZone.forOffsetHours(dateTimeZoneIdentifier)).toLocalDateTime();
-	}
-
-	public static LocalDateTime toLocalDateTimeInUserTimeZone(Date date, int dateTimeZoneIdentifier) {
-		if (date == null) {
-			return null;
-		}
-		return new DateTime(date, DateTimeZone.forOffsetHours(dateTimeZoneIdentifier)).toLocalDateTime();
-	}
-
-	public static LocalDateTime nowWithDateTimeInUTC() {
-		return new DateTime(DEFAULT_DATE_TIME_ZONE).toLocalDateTime();
-	}
-
-	public static Date minusDays(Date date, int days) {
-		return new LocalDate(date).minusDays(days).toDate();
-	}
-
-	public static LocalDateTime getStartLocalDateTimeOfFilter(LocalDate localDate, int userTimeZone) {
-		return localDate == null ? null : getStartLocalDateTimeOfFilter(localDate.toLocalDateTime(LocalTime.MIDNIGHT),
-				userTimeZone);
-	}
-
-	public static LocalDateTime getStartLocalDateTimeOfFilter(LocalDateTime localDateTime, int userTimeZone) {
-		int invertedUserTimeZone = userTimeZone * -1;
-		return localDateTime == null ? null : DateTimeUtil
-				.toLocalDateTimeInUserTimeZone(localDateTime.toDate(), invertedUserTimeZone);
-	}
-
-	public static LocalDateTime getEndLocalDateTimeOfFilter(LocalDate localDate, int userTimeZone) {
-		return localDate == null ? null : getEndLocalDateTimeOfFilter(
-				localDate.toLocalDateTime(LocalTime.MIDNIGHT).minusMillis(1).plusDays(1), userTimeZone);
-	}
-
-	public static LocalDateTime getEndLocalDateTimeOfFilter(LocalDateTime localDateTime, int userTimeZone) {
-		int invertedUserTimeZone = userTimeZone * -1;
-		return localDateTime == null ? null : DateTimeUtil
-				.toLocalDateTimeInUserTimeZone(localDateTime.toDate(), invertedUserTimeZone);
+		return DASH_ISO_DATE_TIME_FORMATTER.format(date);
 	}
 
 	public static int getNumberOfDaysInMonth(YearMonth yearMonth) {
-		return yearMonth.plusMonths(1).toLocalDate(1).minusDays(1).getDayOfMonth();
+		return yearMonth
+				.plusMonths(1)
+				.atDay(1)
+				.minusDays(1)
+				.getDayOfMonth();
 	}
 
-	public static LocalDateTime getStartOfMonth(YearMonth yearMonth) {
-		return yearMonth.toLocalDate(1).toLocalDateTime(LocalTime.MIDNIGHT);
+	public static LocalDateTime atStartOfMonth(YearMonth yearMonth) {
+		return yearMonth
+				.atDay(1)
+				.atTime(LocalTime.MIDNIGHT);
 	}
 
-	public static LocalDateTime getEndOfMonth(YearMonth yearMonth) {
-		return yearMonth.plusMonths(1).toLocalDate(1).toLocalDateTime(LocalTime.MIDNIGHT).minusMillis(1);
+	public static LocalDateTime atEndOfMonth(YearMonth yearMonth) {
+		return yearMonth
+				.plusMonths(1)
+				.atDay(1)
+				.minusDays(1)
+				.atTime(LocalTime.MAX);
 	}
 
-	public static int getDaylightSavings() {
-		return TimeZone.getTimeZone("America/Sao_Paulo").inDaylightTime(new Date()) ? 1 : 0;
+	public static boolean isSaoPauloBrazilInDaylightSavings() {
+		return isNowDaylightSavings("America/Sao_Paulo");
 	}
 
-	public static Date parseInPattern(String value, String pattern) {
-		return DateTimeFormat.forPattern(pattern).parseLocalDateTime(value).toDate();
+	public static boolean isNowDaylightSavings(String timeZoneId) {
+		return TimeZone
+				.getTimeZone(timeZoneId)
+				.inDaylightTime(new Date());
 	}
 
 	public static String formatInPattern(LocalDate localDate, String pattern) {
-		return DateTimeFormat.forPattern(pattern).print(localDate);
+		if (localDate == null) {
+			return null;
+		}
+		return localDate.format(DateTimeFormatter.ofPattern(pattern));
 	}
 
 	public static String formatInPattern(LocalDateTime localDateTime, String pattern) {
-		return DateTimeFormat.forPattern(pattern).print(localDateTime);
-	}
-
-	public static Range<LocalDateTime> dayWithUserTz(LocalDate day, int timeZone) {
-		return Range.closed(toLocalDateTimeInUserTimeZone(day.toDate(), timeZone),
-				toLocalDateTimeInUserTimeZone(day.plusDays(1).toDate(), timeZone));
+		if (localDateTime == null) {
+			return null;
+		}
+		return localDateTime.format(DateTimeFormatter.ofPattern(pattern));
 	}
 
 	public static Range<LocalDate> weekOfDaySundayAsFirstDay(LocalDate day) {
-		LocalDate nextSaturday = day.getDayOfWeek() == DateTimeConstants.SUNDAY ? day.plusDays(6) : day
-				.withDayOfWeek(DateTimeConstants.SATURDAY);
+		LocalDate nextSaturday = day.getDayOfWeek() == DayOfWeek.SUNDAY ? day.plusDays(6) : day
+				.with(ChronoField.DAY_OF_WEEK, DayOfWeek.SATURDAY.getValue());
 		LocalDate previousSunday = nextSaturday.minusDays(6);
 
 		return Range.closed(previousSunday, nextSaturday);
 	}
 
 	public static Range<LocalDate> monthOfDay(LocalDate day) {
-		return Range.closed(day.withDayOfMonth(1), day.dayOfMonth().withMaximumValue());
+		return Range
+				.closed(day.withDayOfMonth(1), atEndOfMonth(YearMonth.of(day.getYear(), day.getMonth())).toLocalDate());
 	}
 
-	public static Range<LocalDateTime> weekOfDaySundayAsFirstDayWithUserTz(LocalDate day, int timeZone) {
+	public static Range<LocalDateTime> weekOfDaySundayAsFirstDayWithUserTz(LocalDate day) {
 		Range<LocalDate> week = weekOfDaySundayAsFirstDay(day);
-		LocalDateTime firstDay = toLocalDateTimeInUserTimeZone(week.lowerEndpoint().toDate(), timeZone);
-		LocalDateTime lastDay = toLocalDateTimeInUserTimeZone(week.upperEndpoint().toDate(), timeZone);
-		return Range.closed(firstDay, lastDay);
+		return Range.closed(week
+				.lowerEndpoint()
+				.atStartOfDay(), week
+				.upperEndpoint()
+				.atTime(LocalTime.MAX));
 	}
 
-	public static Range<LocalDateTime> monthOfDayWithUserTz(LocalDate day, int timeZone) {
+	public static Range<LocalDateTime> monthOfDayWithUserTz(LocalDate day) {
 		Range<LocalDate> month = monthOfDay(day);
-		LocalDateTime firstDay = toLocalDateTimeInUserTimeZone(month.lowerEndpoint().toDate(), timeZone);
-		LocalDateTime lastDay = toLocalDateTimeInUserTimeZone(month.upperEndpoint().toDate(), timeZone);
-		return Range.closed(firstDay, lastDay);
+		return Range.closed(month
+				.lowerEndpoint()
+				.atStartOfDay(), month
+				.upperEndpoint()
+				.atTime(LocalTime.MAX));
+	}
+
+	public static LocalDateTime from(Date date) {
+		if (date == null) {
+			return null;
+		}
+		return date
+				.toInstant()
+				.atZone(ZoneId.systemDefault())
+				.toLocalDateTime();
+	}
+
+	public static Date from(LocalDateTime date) {
+		if (date == null) {
+			return null;
+		}
+		return Date.from(date
+				.atZone(ZoneId.systemDefault())
+				.toInstant());
 	}
 }

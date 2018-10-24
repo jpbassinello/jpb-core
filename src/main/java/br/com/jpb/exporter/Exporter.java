@@ -1,17 +1,18 @@
 package br.com.jpb.exporter;
 
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.YearMonth;
+import br.com.jpb.util.DateTimeUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -86,7 +87,7 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 
 				ExporterDateTime dateTime = column.getAnnotation(ExporterDateTime.class);
 				if (dateTime != null) {
-					writeColumn(dateCellValue(obj), dateTime.format(), rowIndex, colIndex);
+					writeColumn(dateCellValue(obj, dateTime), rowIndex, colIndex);
 					continue;
 				}
 
@@ -149,20 +150,24 @@ public abstract class Exporter<T> extends BaseExporterImporter<T> {
 				.doubleValue();
 	}
 
-	private Date dateCellValue(Object obj) {
-		Date date = null;
+	private String dateCellValue(Object obj, ExporterDateTime format) {
+		LocalDateTime date = null;
+		String pattern = null;
 		if (obj instanceof LocalDateTime) {
-			date = ((LocalDateTime) obj).toDate();
+			date = ((LocalDateTime) obj);
+			pattern = format.formatDateTime();
 		}
 		if (obj instanceof LocalDate) {
-			date = ((LocalDate) obj).toDate();
+			date = ((LocalDate) obj).atTime(LocalTime.MIDNIGHT);
+			pattern = format.formatDate();
 		}
 		if (obj instanceof YearMonth) {
 			date = ((YearMonth) obj)
-					.toLocalDate(1)
-					.toDate();
+					.atDay(1)
+					.atTime(LocalTime.MIDNIGHT);
+			pattern = format.formatMonth();
 		}
-		return date;
+		return DateTimeUtil.formatInPattern(date, pattern);
 	}
 
 	private Object reflectionGet(T t, Field field) {

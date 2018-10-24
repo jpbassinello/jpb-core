@@ -4,18 +4,17 @@ import br.com.caelum.stella.SimpleMessageProducer;
 import br.com.caelum.stella.validation.CNPJValidator;
 import br.com.caelum.stella.validation.CPFValidator;
 import br.com.caelum.stella.validation.InvalidStateException;
+import lombok.experimental.UtilityClass;
 
 import java.util.regex.Pattern;
 
-public final class ValidationUtil {
+@UtilityClass
+public class ValidationUtil {
 
 	public static final String REGEXP_EMAIL = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@" +
 			"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 	private static final Pattern PATTERN_EMAIL = Pattern.compile(REGEXP_EMAIL);
 	private static final String VALID_CHARS_PHONE = "[\\d\\s\\-\\.\\(\\)\u00A0]+";
-
-	private ValidationUtil() {
-	}
 
 	public static boolean isValidCpf(String cpf) {
 		try {
@@ -38,7 +37,9 @@ public final class ValidationUtil {
 	}
 
 	public static boolean isValidEmail(String email) {
-		return email != null && PATTERN_EMAIL.matcher(email.toLowerCase()).matches();
+		return email != null && PATTERN_EMAIL
+				.matcher(email.toLowerCase())
+				.matches();
 	}
 
 	public static boolean isPhoneValid(String phone) {

@@ -3,13 +3,25 @@ package br.com.jpb.exporter.excel;
 import br.com.jpb.exporter.Exporter;
 import com.google.common.io.Files;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.IndexedColors;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class ExcelExporter<T> extends Exporter<T> {
 
@@ -45,7 +57,7 @@ public class ExcelExporter<T> extends Exporter<T> {
 	@Override
 	protected void init(String fileName) {
 		boolean xlsx = "xlsx".equalsIgnoreCase(Files.getFileExtension(fileName));
-		wb =  xlsx ? new XSSFWorkbook() : new HSSFWorkbook();
+		wb = xlsx ? new XSSFWorkbook() : new HSSFWorkbook();
 		sheet = wb.createSheet(sheetName);
 
 		defaultCellStyle = defaultCellStyle(wb);
@@ -77,7 +89,9 @@ public class ExcelExporter<T> extends Exporter<T> {
 		if (dateTimeCellStyle == null) {
 			dateTimeCellStyle = defaultCellStyle(wb);
 			CreationHelper createHelper = wb.getCreationHelper();
-			dateTimeCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(dateFormat));
+			dateTimeCellStyle.setDataFormat(createHelper
+					.createDataFormat()
+					.getFormat(dateFormat));
 
 			dateTimeStylesByFormatter.put(dateFormat, dateTimeCellStyle);
 		}
@@ -95,7 +109,9 @@ public class ExcelExporter<T> extends Exporter<T> {
 
 	@Override
 	protected void writeColumn(int value, int rowIndex, int colIndex) {
-		writeColumn(Integer.valueOf(value).doubleValue(), rowIndex, colIndex);
+		writeColumn(Integer
+				.valueOf(value)
+				.doubleValue(), rowIndex, colIndex);
 	}
 
 	@Override
@@ -168,9 +184,9 @@ public class ExcelExporter<T> extends Exporter<T> {
 	private CellStyle defaultHeaderStyle(Workbook wb) {
 		CellStyle headerStyle = defaultCellStyle(wb);
 		headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
-		headerStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		Font font = wb.createFont();
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		font.setBold(true);
 		headerStyle.setFont(font);
 
 		return headerStyle;
@@ -178,13 +194,13 @@ public class ExcelExporter<T> extends Exporter<T> {
 
 	private CellStyle defaultCellStyle(Workbook wb) {
 		CellStyle style = wb.createCellStyle();
-		style.setBorderBottom(CellStyle.BORDER_THIN);
+		style.setBorderBottom(BorderStyle.THIN);
 		style.setBottomBorderColor(IndexedColors.BLACK.getIndex());
-		style.setBorderLeft(CellStyle.BORDER_THIN);
+		style.setBorderLeft(BorderStyle.THIN);
 		style.setLeftBorderColor(IndexedColors.BLACK.getIndex());
-		style.setBorderTop(CellStyle.BORDER_THIN);
+		style.setBorderTop(BorderStyle.THIN);
 		style.setTopBorderColor(IndexedColors.BLACK.getIndex());
-		style.setBorderRight(CellStyle.BORDER_THIN);
+		style.setBorderRight(BorderStyle.THIN);
 		style.setRightBorderColor(IndexedColors.BLACK.getIndex());
 		return style;
 	}

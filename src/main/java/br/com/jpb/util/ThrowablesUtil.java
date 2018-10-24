@@ -1,8 +1,10 @@
 package br.com.jpb.util;
 
 import com.google.common.base.Throwables;
+import lombok.experimental.UtilityClass;
 
-public final class ThrowablesUtil {
+@UtilityClass
+public class ThrowablesUtil {
 
 	public static boolean verifyClientAbortException(Throwable t) {
 		String stackTraceAsString = Throwables.getStackTraceAsString(t);

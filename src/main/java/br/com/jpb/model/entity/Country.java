@@ -1,14 +1,22 @@
 package br.com.jpb.model.entity;
 
-import br.com.jpb.enums.CountryAcronym;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Immutable;
-import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -25,7 +33,7 @@ public class Country implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "country_id")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "name")
@@ -34,8 +42,8 @@ public class Country implements Serializable {
 	private String name;
 
 	@Column(name = "acronym")
-	@NotNull
-	@Enumerated(EnumType.STRING)
-	private CountryAcronym acronym;
+	@NotEmpty
+	@Size(max = 10)
+	private String acronym;
 
 }

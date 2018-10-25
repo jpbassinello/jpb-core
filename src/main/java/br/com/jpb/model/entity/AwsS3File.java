@@ -65,7 +65,6 @@ public class AwsS3File implements Serializable {
 	@Size(max = 100)
 	private String userCreate;
 
-	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_date_time")
 	@NotNull
 	private LocalDateTime createDateTime;

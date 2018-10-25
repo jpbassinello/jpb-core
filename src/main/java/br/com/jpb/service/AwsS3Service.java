@@ -5,6 +5,7 @@ import br.com.jpb.util.DateTimeUtil;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
@@ -21,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class AwsS3Service {
@@ -30,32 +32,32 @@ public class AwsS3Service {
 			.withContentDisposition("attachment");
 	private
 	@Value("${aws.access.key}")
-	String ACCESS_KEY;
+	String accessKey;
 	private
 	@Value("${aws.secret.access.key}")
-	String SECRET_KEY;
+	String secretKey;
 	private
 	@Value("${aws.s3.bucket}")
-	String BUCKET;
-	private
-	@Value("${aws.s3.endpoint}")
-	String ENDPOINT;
+	String bucket;
 	private
 	@Value("${aws.s3.baseFolder}")
-	String BASE_FOLDER;
+	String baseFolder;
+	private
+	@Value("${aws.s3.region}")
+	String region;
 	private AmazonS3 amazonS3;
 
 	@PostConstruct
 	public void init() {
 		amazonS3 = AmazonS3ClientBuilder
 				.standard()
-				.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY)))
+				.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
+				.withRegion(Optional.ofNullable(Regions.fromName(region)).orElse(Regions.DEFAULT_REGION))
 				.build();
-		amazonS3.setEndpoint(ENDPOINT);
 	}
 
 	public void delete(AwsS3File file) {
-		amazonS3.deleteObject(BUCKET, BASE_FOLDER + "/" + file.getFolder() + "/" + file.getS3FileName());
+		amazonS3.deleteObject(bucket, baseFolder + "/" + file.getFolder() + "/" + file.getS3FileName());
 	}
 
 	public AwsS3File create(File file, String folder, String userCreate) {
@@ -70,7 +72,7 @@ public class AwsS3Service {
 
 		for (int i = 0; i < NUMBER_OF_TRIES_TO_PUT_OBJECT; i++) {
 			try {
-				amazonS3.putObject(BUCKET, BASE_FOLDER + "/" + folder + "/" + awsS3File.getS3FileName(),
+				amazonS3.putObject(bucket, baseFolder + "/" + folder + "/" + awsS3File.getS3FileName(),
 						new BufferedInputStream(new FileInputStream(file)), om);
 				break;
 			} catch (AmazonServiceException e) {
@@ -84,8 +86,8 @@ public class AwsS3Service {
 	}
 
 	public URL getAwsS3FileURL(AwsS3File file, boolean isDownload) {
-		GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(BUCKET,
-				BASE_FOLDER + "/" + file.getFolder() + "/" + file.getS3FileName());
+		GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket,
+				baseFolder + "/" + file.getFolder() + "/" + file.getS3FileName());
 
 		if (isDownload) {
 			return amazonS3.generatePresignedUrl(request.withResponseHeaders(headerContentDispositionAttachment));
@@ -95,8 +97,8 @@ public class AwsS3Service {
 	}
 
 	public URL getAwsS3FileURL(AwsS3File file, LocalDateTime expiresAt, boolean isDownload) {
-		GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(BUCKET,
-				BASE_FOLDER + "/" + file.getFolder() + "/" + file.getS3FileName());
+		GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket,
+				baseFolder + "/" + file.getFolder() + "/" + file.getS3FileName());
 
 		request.setExpiration(DateTimeUtil.from(expiresAt));
 

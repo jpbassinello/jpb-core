@@ -37,7 +37,7 @@ public class AwsS3File implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "aws_s3_file_id")
+	@Column(name = "id")
 	private Long id;
 
 	@Column(name = "folder")

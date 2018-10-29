@@ -13,13 +13,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.ResponseHeaderOverrides;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -52,7 +55,9 @@ public class AwsS3Service {
 		amazonS3 = AmazonS3ClientBuilder
 				.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
-				.withRegion(Optional.ofNullable(Regions.fromName(region)).orElse(Regions.DEFAULT_REGION))
+				.withRegion(Optional
+						.ofNullable(Regions.fromName(region))
+						.orElse(Regions.DEFAULT_REGION))
 				.build();
 	}
 
@@ -60,14 +65,33 @@ public class AwsS3Service {
 		amazonS3.deleteObject(bucket, baseFolder + "/" + file.getFolder() + "/" + file.getS3FileName());
 	}
 
+	public AwsS3File create(InputStream is, String fileName, String folder, String userCreate) {
+		File targetFile = new File(System.getProperty("java.io.tmpdir"), fileName);
+		try {
+			FileCopyUtils.copy(is, new FileOutputStream(targetFile));
+		} catch (IOException e) {
+			throw new IllegalStateException("IO Exception while create FileOutputStream", e);
+		}
+
+		try {
+			return create(targetFile, folder, userCreate);
+		} finally {
+			targetFile.delete();
+		}
+	}
+
 	public AwsS3File create(File file, String folder, String userCreate) {
+		return create(file, file.getName(), folder, userCreate);
+	}
+
+	public AwsS3File create(File file, String fileName, String folder, String userCreate) {
 		final ObjectMetadata om = new ObjectMetadata();
 		om.setContentType(MimetypesFileTypeMap
 				.getDefaultFileTypeMap()
 				.getContentType(file));
 		om.setContentLength(file.length());
 
-		AwsS3File awsS3File = new AwsS3File(folder, file.getName(), userCreate);
+		AwsS3File awsS3File = new AwsS3File(folder, fileName, userCreate);
 		awsS3File.setOriginal(file);
 
 		for (int i = 0; i < NUMBER_OF_TRIES_TO_PUT_OBJECT; i++) {

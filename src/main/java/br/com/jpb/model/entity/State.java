@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Immutable;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -34,8 +33,7 @@ import java.io.Serializable;
 })
 @ToString
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-@Immutable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class State implements Serializable {
 
 	@Id
@@ -56,7 +54,12 @@ public class State implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "country_id")
 	@NotNull
-	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private Country country;
 
+	public State(String name, String acronym, Country country) {
+		this.name = name;
+		this.acronym = acronym;
+		this.country = country;
+	}
 }

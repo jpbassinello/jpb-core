@@ -1,5 +1,6 @@
 package br.com.jpb.model.entity;
 
+import br.com.jpb.util.StringUtil;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,8 +19,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PostLoad;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
@@ -33,7 +37,7 @@ import java.io.Serializable;
 })
 @ToString
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Immutable
 public class City implements Serializable {
 
@@ -47,8 +51,33 @@ public class City implements Serializable {
 	@Size(max = 100)
 	private String name;
 
+	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "state_id")
-	@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private State state;
+
+	@Transient
+	private String nameDashStateAcronym;
+	@Transient
+	private String searchNameDashStateAcronym;
+
+	public City(String name, State state) {
+		this.name = name;
+		this.state = state;
+	}
+
+	@PostLoad
+	public void postLoad() {
+		this.nameDashStateAcronym = this.name + " - " + this.state.getAcronym();
+		this.searchNameDashStateAcronym = StringUtil
+				.removeAccents(this.nameDashStateAcronym)
+				.toUpperCase();
+	}
+
+	public boolean checkSearch(String search) {
+		return this.searchNameDashStateAcronym.contains(StringUtil
+				.removeAccents(search)
+				.toUpperCase());
+	}
 }

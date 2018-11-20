@@ -27,7 +27,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(of = "acronym")
 @ToString
 @Cacheable
-@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Immutable
 public class Country implements Serializable {
 
@@ -46,4 +46,8 @@ public class Country implements Serializable {
 	@Size(max = 10)
 	private String acronym;
 
+	public Country(String name, String acronym) {
+		this.name = name;
+		this.acronym = acronym;
+	}
 }

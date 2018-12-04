@@ -24,7 +24,7 @@ public class StringUtilTest {
 		String s2 = "AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvicoFacial";
 		String s2Limited = StringUtil.limitToBytesAtLastSpace(s2, 60);
 		System.out.println(s2Limited);
-		Assert.assertEquals(s2Limited, "AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvicoFa");
+		Assert.assertEquals(s2Limited, "AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvic");
 		String s3 = new String("Associação Brasileira de Otorrinolaringologia e Cirurgia Cérvico Facial".getBytes(),
 				Charset.forName("UTF-8"));
 		String s3Limited = StringUtil.limitToBytesAtLastSpace(s3, 60);
@@ -37,7 +37,7 @@ public class StringUtilTest {
 		String s4Limited = StringUtil.limitToBytesAtLastSpace(s4, 60);
 		System.out.println(s4Limited);
 		Assert.assertEquals(s4Limited,
-				new String("AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvicoFa".getBytes(),
+				new String("AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvic".getBytes(),
 						Charset.forName("UTF-8")));
 	}
 

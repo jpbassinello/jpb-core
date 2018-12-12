@@ -8,42 +8,14 @@ import br.com.jpb.util.StringUtil;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
-
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
 public class StringUtilTest {
 
 	@Test
-	public void testLimitToBytesAtLastSpace() {
-		String s1 = "Associação Brasileira de Otorrinolaringologia e Cirurgia Cérvico Facial";
-		String s1Limited = StringUtil.limitToBytesAtLastSpace(s1, 60);
-		System.out.println(s1Limited);
-		Assert.assertEquals(s1Limited, "Associação Brasileira de Otorrinolaringologia e Cirurgia");
-		String s2 = "AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvicoFacial";
-		String s2Limited = StringUtil.limitToBytesAtLastSpace(s2, 60);
-		System.out.println(s2Limited);
-		Assert.assertEquals(s2Limited, "AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvic");
-		String s3 = new String("Associação Brasileira de Otorrinolaringologia e Cirurgia Cérvico Facial".getBytes(),
-				Charset.forName("UTF-8"));
-		String s3Limited = StringUtil.limitToBytesAtLastSpace(s3, 60);
-		System.out.println(s3Limited);
-		Assert.assertEquals(s3Limited, new String("Associação Brasileira de Otorrinolaringologia e Cirurgia"
-				.getBytes(),
-				Charset.forName("UTF-8")));
-		String s4 = new String("AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvicoFacial".getBytes(),
-				Charset.forName("UTF-8"));
-		String s4Limited = StringUtil.limitToBytesAtLastSpace(s4, 60);
-		System.out.println(s4Limited);
-		Assert.assertEquals(s4Limited,
-				new String("AssociaçãoBrasileiradeOtorrinolaringologiaeCirurgiaCérvic".getBytes(),
-						Charset.forName("UTF-8")));
-	}
-
-	@Test
 	public void testSubstringInTheLastSpaceBefore() {
-		Assert.assertEquals(null, StringUtil.substringInTheLastSpaceBefore(null, 3000));
+		Assert.assertNull(StringUtil.substringInTheLastSpaceBefore(null, 3000));
 		Assert.assertEquals("Associação Brasileira de Otorrinolaringologia e Cirurgia", StringUtil
 				.substringInTheLastSpaceBefore("Associação Brasileira de Otorrinolaringologia e Cirurgia", 3000));
 

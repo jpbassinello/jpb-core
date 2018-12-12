@@ -154,34 +154,6 @@ public class StringUtil {
 				.trim();
 	}
 
-	public static String limitToBytesAtLastSpace(String s, int numBytes) {
-		if (s == null) {
-			return null;
-		}
-
-		String trim = s.trim();
-		String r = new String();
-		if (trim.contains(" ")) {
-			String[] w = trim.split(" ");
-			for (int i = 0; i < w.length; i++) {
-				if (r.getBytes().length + w[i].getBytes().length + 1 > numBytes) {
-					break;
-				}
-				r += Strings.isNullOrEmpty(r) ? w[i] : " " + w[i];
-			}
-		} else {
-			for (char c : trim.toCharArray()) {
-				if (r.getBytes().length + Character
-						.toString(c)
-						.getBytes().length > numBytes) {
-					break;
-				}
-				r += c;
-			}
-		}
-		return r;
-	}
-
 	public static String md5(String s, int size) {
 		MessageDigest md;
 		try {

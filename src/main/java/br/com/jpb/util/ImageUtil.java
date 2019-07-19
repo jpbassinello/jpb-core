@@ -24,6 +24,7 @@ public class ImageUtil {
 	private static final Set<String> EXTENSIONS;
 	private static final int MAX_FILE_SIZE = 10 * 2097152; // 20MB
 	private static final int ONE_MEGABYTE = 1048576;
+	private static final int RESIZE_RATIO = 500;
 
 	static {
 		EXTENSIONS = new HashSet<>(Arrays.asList("png", "jpg", "jpeg"));
@@ -50,18 +51,19 @@ public class ImageUtil {
 	}
 
 	public static File resizeImage(InputStream is, String extension) throws IOException {
+		return resizeImage(is, extension, RESIZE_RATIO);
+	}
+
+	public static File resizeImage(InputStream is, String extension, int resizeRatio) throws IOException {
 
 		BufferedImage originalImage = ImageIO.read(is);
 
 		int type = originalImage.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : originalImage.getType();
 
-		final int resizedImgWidth = 100;
-		final int resizedImgHeight = 100;
-
 		int h = originalImage.getHeight();
 		int w = originalImage.getWidth();
 
-		BigDecimal ratio = h > w ? MathUtil.divide(h, resizedImgHeight) : MathUtil.divide(w, resizedImgWidth);
+		BigDecimal ratio = h > w ? MathUtil.divide(h, resizeRatio) : MathUtil.divide(w, resizeRatio);
 
 		int rh = MathUtil
 				.divide(BigDecimal.valueOf(h), ratio)

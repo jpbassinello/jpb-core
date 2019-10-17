@@ -2,6 +2,7 @@ package br.com.jpb.service;
 
 import br.com.jpb.model.entity.AwsS3File;
 import br.com.jpb.util.DateTimeUtil;
+import br.com.jpb.util.IOUtil;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -15,8 +16,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.annotation.PostConstruct;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,8 +49,7 @@ public class AwsS3Service {
 	String region;
 	private AmazonS3 amazonS3;
 
-	@PostConstruct
-	public void init() {
+	public AwsS3Service() {
 		amazonS3 = AmazonS3ClientBuilder
 				.standard()
 				.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
@@ -69,14 +67,13 @@ public class AwsS3Service {
 		File targetFile = new File(System.getProperty("java.io.tmpdir"), fileName);
 		try {
 			FileCopyUtils.copy(is, new FileOutputStream(targetFile));
-		} catch (IOException e) {
-			throw new IllegalStateException("IO Exception while create FileOutputStream", e);
-		}
-
-		try {
 			return create(targetFile, folder, userCreate);
+		} catch (IOException e) {
+			throw new IllegalStateException("IO Exception while create Aws File", e);
 		} finally {
-			targetFile.delete();
+			if (targetFile != null) {
+				targetFile.delete();
+			}
 		}
 	}
 
@@ -86,9 +83,7 @@ public class AwsS3Service {
 
 	public AwsS3File create(File file, String fileName, String folder, String userCreate) {
 		final ObjectMetadata om = new ObjectMetadata();
-		om.setContentType(MimetypesFileTypeMap
-				.getDefaultFileTypeMap()
-				.getContentType(file));
+		om.setContentType(IOUtil.extractContentType(file));
 		om.setContentLength(file.length());
 
 		AwsS3File awsS3File = new AwsS3File(folder, fileName, userCreate);

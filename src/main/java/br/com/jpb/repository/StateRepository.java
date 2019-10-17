@@ -4,7 +4,6 @@ import br.com.jpb.model.entity.Country;
 import br.com.jpb.model.entity.State;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.QueryHints;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.QueryHint;

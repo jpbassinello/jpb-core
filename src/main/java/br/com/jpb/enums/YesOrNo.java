@@ -4,7 +4,7 @@
  */
 package br.com.jpb.enums;
 
-import br.com.jpb.util.MessageUtil;
+import br.com.jpb.component.Messages;
 
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
@@ -32,6 +32,6 @@ public enum YesOrNo implements ValueLabelEnum {
 
 	@Override
 	public String getFormattedValue() {
-		return MessageUtil.getString(label);
+		return Messages.getMessage(label);
 	}
 }

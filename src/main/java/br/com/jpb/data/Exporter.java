@@ -1,4 +1,4 @@
-package br.com.jpb.exporter;
+package br.com.jpb.data;
 
 import br.com.jpb.util.DateTimeUtil;
 

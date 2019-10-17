@@ -1,7 +1,6 @@
-package br.com.jpb.exporter.excel;
+package br.com.jpb.data.excel;
 
-import br.com.jpb.exporter.Importer;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import br.com.jpb.data.Importer;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DateUtil;
@@ -23,7 +22,6 @@ import java.util.Set;
 public class ExcelImporter<T> extends Importer<T> {
 
 	private int sheetNumber = 0;
-	private Workbook wb;
 	private Sheet sheet;
 
 	public ExcelImporter(Class<T> clazz) {
@@ -61,9 +59,10 @@ public class ExcelImporter<T> extends Importer<T> {
 
 	@Override
 	protected void init(InputStream is) {
+		Workbook wb;
 		try {
 			wb = getWorkbook(is);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new IllegalStateException("Error while get workbook from Input Stream", e);
 		}
 		sheet = wb.getSheetAt(this.sheetNumber);
@@ -82,12 +81,12 @@ public class ExcelImporter<T> extends Importer<T> {
 			List<String> columns = new ArrayList<>();
 			for (int colIndex = 0; colIndex < row.getLastCellNum(); colIndex++) {
 				Cell cell = row.getCell(colIndex);
-				if (cell == null || cell.getCellTypeEnum() == CellType.BLANK) {
+				if (cell == null || cell.getCellType() == CellType.BLANK) {
 					columns.add(null);
 					continue;
 				}
 				try {
-					switch (cell.getCellTypeEnum()) {
+					switch (cell.getCellType()) {
 						case STRING:
 							columns.add(cell.getStringCellValue());
 							break;
@@ -133,11 +132,11 @@ public class ExcelImporter<T> extends Importer<T> {
 		return rows;
 	}
 
-	private Workbook getWorkbook(InputStream inputStream) throws IOException {
+	private Workbook getWorkbook(InputStream inputStream) {
 		Workbook wb;
 		try {
 			wb = WorkbookFactory.create(inputStream);
-		} catch (InvalidFormatException e) {
+		} catch (Exception e) {
 			throw new IllegalStateException("Error while create workbook.", e);
 		}
 		return wb;

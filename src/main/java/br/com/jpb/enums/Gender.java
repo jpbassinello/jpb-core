@@ -4,7 +4,7 @@
  */
 package br.com.jpb.enums;
 
-import br.com.jpb.util.MessageUtil;
+import br.com.jpb.component.Messages;
 import lombok.RequiredArgsConstructor;
 
 import java.util.stream.Stream;
@@ -30,6 +30,6 @@ public enum Gender {
 	}
 
 	public String getPtBr() {
-		return MessageUtil.getString(value);
+		return Messages.getMessage(value);
 	}
 }

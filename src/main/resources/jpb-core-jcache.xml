@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config
+		xmlns:jsr107='http://www.ehcache.org/v3/jsr107'
+		xmlns='http://www.ehcache.org/v3'>
+	<service>
+		<jsr107:defaults enable-management="true" enable-statistics="true"/>
+	</service>
+
+	<cache-template name="default-find-all-query">
+		<expiry>
+			<ttl unit="days">1</ttl>
+		</expiry>
+		<heap>2</heap>
+	</cache-template>
+
+	<cache alias="br.com.jpb.model.entity.Country">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>10</heap>
+	</cache>
+	<cache alias="Country.findAll" uses-template="default-find-all-query"/>
+	<cache alias="Country.findByAcronymOrderByName">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>5</heap>
+	</cache>
+
+	<cache alias="br.com.jpb.model.entity.State">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>50</heap>
+	</cache>
+	<cache alias="State.findAll" uses-template="default-find-all-query"/>
+	<cache alias="State.findByCountryOrderByName">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>10</heap>
+	</cache>
+
+	<cache alias="br.com.jpb.model.entity.City">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>10000</heap>
+	</cache>
+	<cache alias="City.findAll" uses-template="default-find-all-query"/>
+	<cache alias="City.findByStateOrderByName">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>50</heap>
+	</cache>
+	<cache alias="City.findByCountryAcronym">
+		<expiry>
+			<none/>
+		</expiry>
+		<heap>10</heap>
+	</cache>
+
+	<cache alias="br.com.jpb.model.entity.AwsS3File">
+		<expiry>
+			<ttl unit="days">1</ttl>
+		</expiry>
+		<heap>10000</heap>
+	</cache>
+
+</config>

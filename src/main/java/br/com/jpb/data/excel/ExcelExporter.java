@@ -1,6 +1,6 @@
-package br.com.jpb.exporter.excel;
+package br.com.jpb.data.excel;
 
-import br.com.jpb.exporter.Exporter;
+import br.com.jpb.data.Exporter;
 import com.google.common.io.Files;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.BorderStyle;

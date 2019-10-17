@@ -35,4 +35,15 @@ public class IOUtil {
 			throw new IllegalStateException("Error while reading string from " + resource.getPath(), e);
 		}
 	}
+
+	public static String extractContentType(File f) {
+		if (f == null) {
+			return null;
+		}
+		try {
+			return Files.probeContentType(f.toPath());
+		} catch (IOException e) {
+			throw new IllegalStateException("IOException while extracting ContentType from file " + f.getName(), e);
+		}
+	}
 }

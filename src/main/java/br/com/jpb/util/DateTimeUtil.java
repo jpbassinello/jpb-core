@@ -4,6 +4,7 @@
  */
 package br.com.jpb.util;
 
+import br.com.jpb.component.Messages;
 import com.google.common.base.Strings;
 import com.google.common.collect.Range;
 import lombok.experimental.UtilityClass;
@@ -26,11 +27,11 @@ import java.util.TimeZone;
 public class DateTimeUtil {
 
 	public static final DateTimeFormatter DASH_DATE_FORMATTER = DateTimeFormatter
-			.ofPattern(MessageUtil.getString("dash.view.dateFormat"));
+			.ofPattern(Messages.getMessage("dash.view.dateFormat"));
 	public static final DateTimeFormatter DEFAULT_DATE_FORMATTER = DateTimeFormatter
-			.ofPattern(MessageUtil.getString("default.view.dateFormat"));
+			.ofPattern(Messages.getMessage("default.view.dateFormat"));
 	public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter
-			.ofPattern(MessageUtil.getString("default.view.dateTimeFormat"));
+			.ofPattern(Messages.getMessage("default.view.dateTimeFormat"));
 
 	public static final DateTimeFormatter DASH_ISO_DATE_FORMATTER = DateTimeFormatter
 			.ofPattern("yyyy-MM-dd");

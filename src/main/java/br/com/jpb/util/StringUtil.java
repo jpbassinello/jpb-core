@@ -4,6 +4,7 @@
  */
 package br.com.jpb.util;
 
+import br.com.jpb.component.Messages;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
@@ -64,36 +65,36 @@ public class StringUtil {
 
 	private static String getTimeAgo(long daysAgo, long hoursAgo, long minutesAgo) {
 		if (daysAgo == 0 && hoursAgo == 0 && minutesAgo == 0) {
-			return MessageUtil.getString("justNow");
+			return Messages.getMessage("justNow");
 		}
 		StringBuilder sb = new StringBuilder();
-		sb.append(MessageUtil.getString("just"));
+		sb.append(Messages.getMessage("just"));
 		sb.append(SPACE);
 		if (daysAgo > 0) {
 			sb.append(daysAgo);
 			sb.append(SPACE);
 			if (daysAgo == 1) {
-				sb.append(MessageUtil.getString("day"));
+				sb.append(Messages.getMessage("day"));
 			} else {
-				sb.append(MessageUtil.getString("days"));
+				sb.append(Messages.getMessage("days"));
 			}
 		} else {
 			if (hoursAgo > 0) {
 				sb.append(hoursAgo);
 				sb.append(SPACE);
 				if (hoursAgo == 1) {
-					sb.append(MessageUtil.getString("hour"));
+					sb.append(Messages.getMessage("hour"));
 				} else {
-					sb.append(MessageUtil.getString("hours"));
+					sb.append(Messages.getMessage("hours"));
 				}
 			} else {
 				if (minutesAgo > 0) {
 					sb.append(minutesAgo);
 					sb.append(SPACE);
 					if (minutesAgo == 1) {
-						sb.append(MessageUtil.getString("minute"));
+						sb.append(Messages.getMessage("minute"));
 					} else {
-						sb.append(MessageUtil.getString("minutes"));
+						sb.append(Messages.getMessage("minutes"));
 					}
 				}
 			}
@@ -515,8 +516,8 @@ public class StringUtil {
 	}
 
 	public static String formatCurrency(BigDecimal value) {
-		return value == null || BigDecimal.ZERO.equals(value.setScale(0, RoundingMode.HALF_UP)) ? MessageUtil
-				.getString("free") : MessageUtil.getString("currency") + " " + value
+		return value == null || BigDecimal.ZERO.equals(value.setScale(0, RoundingMode.HALF_UP)) ? Messages.getMessage(
+				"free") : Messages.getMessage("currency") + " " + value
 				.setScale(2, RoundingMode.HALF_UP)
 				.toString();
 	}

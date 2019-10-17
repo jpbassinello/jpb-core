@@ -2,13 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.jpb.exporter.test;
+package br.com.jpb.data.test;
 
-import br.com.jpb.exporter.ExporterColumn;
-import br.com.jpb.exporter.ExporterDateTime;
-import br.com.jpb.exporter.ExporterNumeric;
-import br.com.jpb.exporter.txt.TxtExporter;
-import br.com.jpb.exporter.txt.TxtImporter;
+import br.com.jpb.data.ExporterColumn;
+import br.com.jpb.data.ExporterDateTime;
+import br.com.jpb.data.ExporterNumeric;
+import br.com.jpb.data.excel.ExcelExporter;
+import br.com.jpb.data.excel.ExcelImporter;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -28,17 +28,17 @@ import java.util.Set;
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
  */
-public class TxtTest {
+public class ExcelImportAndExportTest {
 
 	private static final LocalDateTime DATE_TIME_1 = LocalDate
 			.now()
-			.atTime(LocalTime.of(10, 0, 0, 0));
+			.atTime(LocalTime.of(10, 0));
 	private static final LocalDateTime DATE_TIME_2 = LocalDate
 			.now()
 			.atTime(LocalTime.of(18, 23, 54, 0));
 
 	@Test
-	public void testExportImport() {
+	public void testImportAndExport() {
 
 		List<TestPojo> expected = new ArrayList<>();
 		expected.add(new TestPojo(1, "Coluna 1", true, LocalDate.now(), DATE_TIME_1, new BigDecimal("0.333")));
@@ -48,45 +48,33 @@ public class TxtTest {
 				new BigDecimal("23.996")));
 
 		testHappyFlow(expected);
-		testPipeSeparator(expected);
-		testWithIgnoredFields(expected);
+		testWithIgnoreFields(expected);
 	}
 
-	private void testHappyFlow(List<TestPojo> expected) {
-		File file = new TxtExporter<>(TestPojo.class).exportFile(expected, "test.csv");
-
-		List<TestPojo> processed = new TxtImporter<>(TestPojo.class).importFile(file);
-
-		Assert.assertEquals(expected, processed);
-	}
-
-	private void testWithIgnoredFields(List<TestPojo> expected) {
-		final Set<String> ignoredFields = new HashSet<>(Arrays.asList("c1", "c3", "c4", "c6"));
-		File fileWithIgnoredFields = new TxtExporter<>(TestPojo.class)
-				.withIgnoredFields(ignoredFields)
-				.exportFile(expected, "testWithIgnoredFields.csv");
-
+	private void testWithIgnoreFields(List<TestPojo> expected) {
 		List<TestPojo> expectedWithIgnoredFields = new ArrayList<>();
 		expectedWithIgnoredFields.add(new TestPojo(0, "Coluna 1", false, null, DATE_TIME_1, null));
 		expectedWithIgnoredFields.add(new TestPojo(0, "Coluna 2", false, null, DATE_TIME_2, null));
+		List<TestPojo> processedWithIgnoredFields;
 
-		List<TestPojo> processedWithIgnoredFields = new TxtImporter<>(TestPojo.class)
-				.withIgnoredFields(ignoredFields)
+		final Set<String> ignoredFiedls = new HashSet<>(Arrays.asList("c1", "c3", "c4", "c6"));
+		File fileWithIgnoredFields = new ExcelExporter<>(TestPojo.class)
+				.withIgnoredFields(ignoredFiedls)
+				.exportFile(expected, "testWithIgnoredFields.xls");
+
+		processedWithIgnoredFields = new ExcelImporter<>(TestPojo.class)
+				.withIgnoredFields(ignoredFiedls)
 				.importFile(fileWithIgnoredFields);
 
 		Assert.assertEquals(expectedWithIgnoredFields, processedWithIgnoredFields);
 	}
 
-	private void testPipeSeparator(List<TestPojo> expected) {
-		File filePipeSeparator = new TxtExporter<>(TestPojo.class)
-				.withSeparator('|')
-				.exportFile(expected, "testPipeSeparator.csv");
+	private void testHappyFlow(List<TestPojo> expected) {
+		File file = new ExcelExporter<>(TestPojo.class).exportFile(expected, "test.xls");
 
-		List<TestPojo> processedPipeSeparator = new TxtImporter<>(TestPojo.class)
-				.withSeparator('|')
-				.importFile(filePipeSeparator);
+		List<TestPojo> processed = new ExcelImporter<>(TestPojo.class).importFile(file);
 
-		Assert.assertEquals(expected, processedPipeSeparator);
+		Assert.assertEquals(expected, processed);
 	}
 
 	public static class TestPojo {

@@ -4,7 +4,7 @@
  */
 package br.com.jpb.exception;
 
-import br.com.jpb.util.MessageUtil;
+import br.com.jpb.component.Messages;
 
 /**
  * @author "<a href='jpbassinello@gmail.com'>João Paulo Bassinello</a>"
@@ -36,6 +36,6 @@ public abstract class BaseException extends Exception {
 	}
 
 	public String getDetailedMessage() {
-		return MessageUtil.getString(getMessage(), args);
+		return Messages.getMessage(getMessage(), args);
 	}
 }

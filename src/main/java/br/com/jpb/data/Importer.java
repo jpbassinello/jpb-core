@@ -1,4 +1,4 @@
-package br.com.jpb.exporter;
+package br.com.jpb.data;
 
 import java.io.BufferedInputStream;
 import java.io.File;

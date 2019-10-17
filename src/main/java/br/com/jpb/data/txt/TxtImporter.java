@@ -1,6 +1,6 @@
-package br.com.jpb.exporter.txt;
+package br.com.jpb.data.txt;
 
-import br.com.jpb.exporter.Importer;
+import br.com.jpb.data.Importer;
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;

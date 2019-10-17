@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package br.com.jpb.exporter.test;
+package br.com.jpb.data.test;
 
-import br.com.jpb.exporter.ExporterColumn;
-import br.com.jpb.exporter.ExporterDateTime;
-import br.com.jpb.exporter.ExporterNumeric;
-import br.com.jpb.exporter.excel.ExcelImporter;
+import br.com.jpb.data.ExporterColumn;
+import br.com.jpb.data.ExporterDateTime;
+import br.com.jpb.data.ExporterNumeric;
+import br.com.jpb.data.excel.ExcelImporter;
 import br.com.jpb.util.IOUtil;
 import org.junit.Assert;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package br.com.jpb.exporter;
+package br.com.jpb.data;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

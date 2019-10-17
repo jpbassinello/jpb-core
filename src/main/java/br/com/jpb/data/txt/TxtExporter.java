@@ -1,6 +1,6 @@
-package br.com.jpb.exporter.txt;
+package br.com.jpb.data.txt;
 
-import br.com.jpb.exporter.Exporter;
+import br.com.jpb.data.Exporter;
 import br.com.jpb.util.DateTimeUtil;
 import com.google.common.base.Joiner;
 

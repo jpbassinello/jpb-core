@@ -1,4 +1,4 @@
-package br.com.jpb.exporter;
+package br.com.jpb.data;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,10 +7,10 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-public @interface ExporterDateTime {
+public @interface ExporterColumn {
 
-	String formatDateTime() default "dd/MM/yyyy HH:mm:ss";
-	String formatDate() default "dd/MM/yyyy";
-	String formatMonth() default "MM/yyyy";
+	String headerText();
+
+	int index();
 
 }

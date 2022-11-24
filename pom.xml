@@ -24,7 +24,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring.version>5.1.10.RELEASE</spring.version>
-		<hibernate.version>5.2.17.Final</hibernate.version>
+		<hibernate.version>5.3.20.Final</hibernate.version>
 		<poi.version>4.1.0</poi.version>
 	</properties>
 
